@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ResetPasswordPage1 extends StatelessWidget {
   @override
@@ -60,7 +61,7 @@ class ResetPasswordPage1 extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/verify_email');
+                  context.push("/verify_email");
                 },
                 child: Text("Recevoir mon lien"),
                 style: ElevatedButton.styleFrom(

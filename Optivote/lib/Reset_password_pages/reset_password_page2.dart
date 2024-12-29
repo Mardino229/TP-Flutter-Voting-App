@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ResetPasswordPage2 extends StatelessWidget {
   @override
@@ -20,7 +21,7 @@ class ResetPasswordPage2 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/email.png',
+              'assets/Group 1000003745.png',
               height: 150,
               width: 150,
             ),
@@ -47,7 +48,7 @@ class ResetPasswordPage2 extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/new_password');
+                  context.push("/new_password");
                 },
                 child: Text("Vérifier le mail"),
                 style: ElevatedButton.styleFrom(

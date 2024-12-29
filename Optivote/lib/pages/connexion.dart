@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Reset_password_pages/reset_password_page1.dart';
 import 'inscription.dart';
 
 class Login extends StatefulWidget {
@@ -15,6 +16,11 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: BackgroundPage(),
+      debugShowCheckedModeBanner: false,
+      routes:{
+        '/inscription':(context) => Inscription(),
+        '/reset_password': (context) => ResetPasswordPage1(),
+      },
     );
   }
 }
@@ -39,7 +45,7 @@ class BackgroundPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(8, 109, 42, 1.0),
                       image: DecorationImage(
-                        image: AssetImage("assets/images/img1.png"),
+                        image: AssetImage("assets/image 1.png"),
                         opacity: 0.35,
                         fit: BoxFit.cover,
                       ),
@@ -57,7 +63,7 @@ class BackgroundPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(11, 160, 61, 1.0),
                       image: DecorationImage(
-                        image: AssetImage("assets/images/img1.png"),
+                        image: AssetImage("assets/image 1.png"),
                         opacity: 0.35,
                         fit: BoxFit.cover,
                       ),
@@ -75,7 +81,7 @@ class BackgroundPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(15, 211, 80, 1.0),
                       image: DecorationImage(
-                        image: AssetImage("assets/images/img1.png"),
+                        image: AssetImage("assets/image 1.png"),
                         opacity: 0.35,
                         fit: BoxFit.cover,
                       ),
@@ -84,7 +90,6 @@ class BackgroundPage extends StatelessWidget {
                   ),
                 ),
               ),
-              // Contenu de la page (superposé)
               Center(
                 child: Stack(
                   clipBehavior: Clip.none, // Permet au CircleAvatar de dépasser les limites du Container
@@ -187,7 +192,8 @@ class BackgroundPage extends StatelessWidget {
                           ),
                           TextButton(
                               onPressed: () {
-
+                                print("Boutton pressé");
+                                Navigator.of(context).pushNamed('/reset_password');
                               },
                               child: Text("Mot de passe oublié?",
                                 style: TextStyle(
@@ -208,6 +214,7 @@ class BackgroundPage extends StatelessWidget {
                                 foregroundColor: MaterialStateProperty.all(Colors.white)
                             ),
                             onPressed: () {
+                              Navigator.of(context).pushNamed('/login');
                             },
                             child: Text("Se connecter",
                               style: TextStyle(
@@ -237,7 +244,7 @@ class BackgroundPage extends StatelessWidget {
                             child: Row(
                               children: [
                                 SizedBox(width: screenWidth*0.08,height: screenHeight*0.015,),
-                                Image(image: AssetImage("assets/images/img.png"),height: screenHeight*0.015,),
+                                Image(image: AssetImage("assets/img.png"),height: screenHeight*0.015,),
                                 TextButton(
                                     onPressed: () {
 
@@ -260,12 +267,7 @@ class BackgroundPage extends StatelessWidget {
                             TextButton(
                                 onPressed: ()
                                 {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return Inscription();
-                                      })
-                                  );
+                                  Navigator.of(context).pushNamed('/inscription');
                                 },
                                 child: Text("S'inscrire",
                                   style: TextStyle(
@@ -285,7 +287,7 @@ class BackgroundPage extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 60,
                         backgroundColor: Colors.white,
-                        child:Image(image: AssetImage('assets/images/OPTIVOTE.png'),height: 80,) ,
+                        child:Image(image: AssetImage('assets/logo/Fichier 1@4x.png'),height: 80,) ,
                       ),
                     ),
                   ],

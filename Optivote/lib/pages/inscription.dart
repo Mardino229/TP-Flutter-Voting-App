@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'connexion.dart';
 
@@ -15,6 +16,7 @@ class _InscriptionState extends State<Inscription> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Insc(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -39,7 +41,7 @@ class Insc extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(8, 109, 42, 1.0),
                     image: DecorationImage(
-                      image: AssetImage("assets/images/img1.png"),
+                      image: AssetImage("assets/image 1.png"),
                       opacity: 0.35,
                       fit: BoxFit.cover,
                     ),
@@ -57,7 +59,7 @@ class Insc extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(11, 160, 61, 1.0),
                     image: DecorationImage(
-                      image: AssetImage("assets/images/img1.png"),
+                      image: AssetImage("assets/image 1.png"),
                       opacity: 0.35,
                       fit: BoxFit.cover,
                     ),
@@ -75,7 +77,7 @@ class Insc extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(15, 211, 80, 1.0),
                     image: DecorationImage(
-                      image: AssetImage("assets/images/img1.png"),
+                      image: AssetImage("assets/image 1.png"),
                       opacity: 0.35,
                       fit: BoxFit.cover,
                     ),
@@ -364,7 +366,7 @@ class Insc extends StatelessWidget {
                           child: Row(
                             children: [
                               SizedBox(width: screenWidth*0.08,height: screenHeight*0.015,),
-                              Image(image: AssetImage("assets/images/img.png"),height: screenHeight*0.015,),
+                              Image(image: AssetImage("assets/img.png"),height: screenHeight*0.015,),
                               TextButton(
                                   onPressed: () {
 
@@ -386,12 +388,7 @@ class Insc extends StatelessWidget {
                           Text("Vous avez déja un compte?",style: TextStyle(color:Color.fromRGBO(8, 109, 42, 1),),),
                           TextButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return Login();
-                                    })
-                                );
+                                context.push("/connexion");
                               },
                               child: Text("Se connecter",
                                 style: TextStyle(
@@ -411,7 +408,7 @@ class Insc extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 60,
                       backgroundColor: Colors.white,
-                      child:Image(image: AssetImage('assets/images/OPTIVOTE.png'),height: 80,) ,
+                      child:Image(image: AssetImage('assets/logo/Fichier 1@4x.png'),height: 80,) ,
                     ),
                   ),
                 ],

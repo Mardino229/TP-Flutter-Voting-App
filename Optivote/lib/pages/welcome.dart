@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:optivote/pages/connexion.dart';
-import 'package:optivote/pages/inscription.dart';
+import 'package:go_router/go_router.dart';
 
 class Welcome_Page extends StatelessWidget {
   const Welcome_Page({super.key});
@@ -19,7 +18,7 @@ class Welcome_Page extends StatelessWidget {
             height: screenHeight*0.2,
           ),
           Image(
-            image: AssetImage('assets/images/OPTIVOTE.png'),
+            image: AssetImage('assets/logo/Fichier 1@4x.png'),
             width: screenWidth*0.7,
           ),
           SizedBox(
@@ -71,12 +70,7 @@ class Welcome_Page extends StatelessWidget {
                                 foregroundColor: MaterialStateProperty.all(Colors.black)
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return Login();
-                                  })
-                              );
+                              context.push("/connexion");
                             },
                             child: Text("Se connecter",
                               style: TextStyle(
@@ -97,12 +91,7 @@ class Welcome_Page extends StatelessWidget {
                                 foregroundColor: MaterialStateProperty.all(Colors.white)
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return Inscription();
-                                  })
-                              );
+                              context.push("/inscription");
                             },
                             child: Text("Créer un compte",
                               style: TextStyle(
