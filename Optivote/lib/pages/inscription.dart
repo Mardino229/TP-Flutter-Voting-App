@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import 'connexion.dart';
-
 class Inscription extends StatefulWidget {
   const Inscription({super.key});
 
@@ -22,6 +18,8 @@ class _InscriptionState extends State<Inscription> {
 }
 
 class Insc extends StatelessWidget {
+  const Insc({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -328,13 +326,13 @@ class Insc extends StatelessWidget {
                         SizedBox(height: screenHeight*0.01,),
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Color.fromRGBO(8, 109, 42, 1)),
-                              elevation: MaterialStateProperty.all(0),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                              backgroundColor: WidgetStateProperty.all(Color.fromRGBO(8, 109, 42, 1)),
+                              elevation: WidgetStateProperty.all(0),
+                              shape: WidgetStateProperty.all(RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 side: BorderSide(color: Color(0xFF707070), width: 1),
                               )),
-                              foregroundColor: MaterialStateProperty.all(Colors.white)
+                              foregroundColor: WidgetStateProperty.all(Colors.white)
                           ),
                           onPressed: () {
                           },
