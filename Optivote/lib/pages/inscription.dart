@@ -40,7 +40,7 @@ class Insc extends StatelessWidget {
                     color: Color.fromRGBO(8, 109, 42, 1.0),
                     image: DecorationImage(
                       image: AssetImage("assets/image 1.png"),
-                      opacity: 0.35,
+                      opacity: 0.25,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -76,7 +76,7 @@ class Insc extends StatelessWidget {
                     color: Color.fromRGBO(15, 211, 80, 1.0),
                     image: DecorationImage(
                       image: AssetImage("assets/image 1.png"),
-                      opacity: 0.35,
+                      opacity: 0.45,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -90,16 +90,16 @@ class Insc extends StatelessWidget {
                 clipBehavior: Clip.none, // Permet au CircleAvatar de dépasser les limites du Container
                 children: [
                   Container(
-                    width: screenWidth*0.8,
-                    height: screenHeight*0.8,
+                    width: screenWidth*0.85,
+                    height: screenHeight*0.85,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16), // Coins arrondis
                     ),
                     child: Column(
                       children: [
-                        SizedBox(height: screenHeight*0.04,),
-                        Text("Inscription",style: TextStyle(fontSize: 35,fontWeight: FontWeight.w100),),
+                        SizedBox(height: screenHeight*0.03,),
+                        Text("Inscription",style: TextStyle(fontSize: screenWidth * 0.09,fontWeight: FontWeight.w100),),
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 10,),
                           child:
@@ -107,7 +107,7 @@ class Insc extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Nom complet",style: TextStyle(fontSize: 17,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
+                              Text("Nom complet",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
                               SizedBox(height: screenHeight*0.006),
                               Stack(
 
@@ -133,9 +133,9 @@ class Insc extends StatelessWidget {
                                     decoration: InputDecoration(
                                       border: InputBorder.none, // Supprime les bordures standards
                                       isDense: true, // Réduit l'espace vertical
-                                      contentPadding: EdgeInsets.zero,
+                                      contentPadding: EdgeInsets.only(left: 22,bottom: 10),
                                     ),
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: screenWidth * 0.035),
                                   ),
                                 ],
                               ),
@@ -149,7 +149,7 @@ class Insc extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("E-mail",style: TextStyle(fontSize: 17,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
+                              Text("E-mail",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
                               SizedBox(height: screenHeight*0.006),
                               Stack(
 
@@ -175,9 +175,9 @@ class Insc extends StatelessWidget {
                                     decoration: InputDecoration(
                                       border: InputBorder.none, // Supprime les bordures standards
                                       isDense: true, // Réduit l'espace vertical
-                                      contentPadding: EdgeInsets.zero,
+                                      contentPadding: EdgeInsets.only(left: 22,bottom: 10),
                                     ),
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: screenWidth * 0.035),
                                   ),
                                 ],
                               ),
@@ -191,7 +191,7 @@ class Insc extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("NPI",style: TextStyle(fontSize: 17,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
+                              Text("NPI",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
                               SizedBox(height: screenHeight*0.006),
                               Stack(
 
@@ -217,9 +217,9 @@ class Insc extends StatelessWidget {
                                     decoration: InputDecoration(
                                       border: InputBorder.none, // Supprime les bordures standards
                                       isDense: true, // Réduit l'espace vertical
-                                      contentPadding: EdgeInsets.zero,
+                                      contentPadding: EdgeInsets.only(left: 22,bottom: 10),
                                     ),
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: screenWidth * 0.035),
                                   ),
                                 ],
                               ),
@@ -233,7 +233,7 @@ class Insc extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Piece d'identité",style: TextStyle(fontSize: 17,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
+                              Text("Piece d'identité",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
                               SizedBox(height: screenHeight*0.006),
                               Stack(
 
@@ -244,7 +244,7 @@ class Insc extends StatelessWidget {
                                       size: 20,
                                       color: Color.fromRGBO(8, 109, 42, 1),
                                     ),
-                                    SizedBox(width: screenWidth*0.5,),
+                                    SizedBox(width: screenWidth*0.56,),
                                     IconButton(onPressed:(){},
                                       icon:Icon(
                                           Icons.drive_folder_upload_outlined,
@@ -269,9 +269,9 @@ class Insc extends StatelessWidget {
                                     decoration: InputDecoration(
                                       border: InputBorder.none, // Supprime les bordures standards
                                       isDense: true, // Réduit l'espace vertical
-                                      contentPadding: EdgeInsets.zero,
+                                      contentPadding: EdgeInsets.only(left: 22,bottom: 10),
                                     ),
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: screenWidth * 0.035),
                                   ),
                                 ],
                               ),
@@ -285,7 +285,7 @@ class Insc extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Mot de passe",style: TextStyle(fontSize: 17,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
+                              Text("Mot de passe",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
                               SizedBox(height: screenHeight*0.006),
                               Stack(
 
@@ -311,9 +311,9 @@ class Insc extends StatelessWidget {
                                     decoration: InputDecoration(
                                       border: InputBorder.none, // Supprime les bordures standards
                                       isDense: true, // Réduit l'espace vertical
-                                      contentPadding: EdgeInsets.zero,
+                                      contentPadding: EdgeInsets.only(left: 22,bottom: 10),
                                     ),
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: screenWidth * 0.035),
                                   ),
                                 ],
                               ),
@@ -323,7 +323,7 @@ class Insc extends StatelessWidget {
 
 
 
-                        SizedBox(height: screenHeight*0.01,),
+                        SizedBox(height: screenHeight*0.02,),
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(Color.fromRGBO(8, 109, 42, 1)),
@@ -336,7 +336,7 @@ class Insc extends StatelessWidget {
                           ),
                           onPressed: () {
                           },
-                          child: Text("Se connecter",
+                          child: Text("S'inscrire",
                             style: TextStyle(
                                 fontSize: screenWidth * 0.045,
                                 fontWeight: FontWeight.w300
@@ -345,7 +345,7 @@ class Insc extends StatelessWidget {
                         ),
                         SizedBox(height: screenHeight*0.02,),
                         Text("OU",style:TextStyle(color:Color.fromRGBO(8, 109, 42, 1),),),
-                        SizedBox(height: screenHeight*0.02,),
+                        SizedBox(height: screenHeight*0.01,),
                         Container(
                           width: screenWidth*0.65,
                           height: screenHeight*0.045,
@@ -380,10 +380,10 @@ class Insc extends StatelessWidget {
                           ),
 
                         ),
-                        SizedBox(height: screenHeight*0.02,),
+                        SizedBox(height: screenHeight*0.015,),
                         Row(children: [
                           SizedBox(width: screenWidth*0.1,),
-                          Text("Vous avez déja un compte?",style: TextStyle(color:Color.fromRGBO(8, 109, 42, 1),),),
+                          Text("Vous avez déja un compte?",style: TextStyle(color:Color.fromRGBO(8, 109, 42, 1),fontSize: screenWidth * 0.035,),),
                           TextButton(
                               onPressed: () {
                                 context.push("/connexion");
@@ -391,7 +391,7 @@ class Insc extends StatelessWidget {
                               child: Text("Se connecter",
                                 style: TextStyle(
                                   color: Color.fromRGBO(8, 109, 42, 1),
-                                  fontSize: 13,
+                                  fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.bold,
                                 ),
                               )

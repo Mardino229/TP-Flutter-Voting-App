@@ -12,7 +12,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => Welcome_Page(),
+      builder: (context, state) => Welcome(),
     ),
     GoRoute(
       path:'/connexion',
@@ -41,18 +41,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
       title: 'OptiVote',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF3172B8)),
-        useMaterial3: true,
-        fontFamily: "Poppins",
-      ),
     );
   }
 }

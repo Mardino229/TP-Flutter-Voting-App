@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Reset_password_pages/reset_password_page1.dart';
@@ -26,6 +25,8 @@ class _LoginState extends State<Login> {
 }
 
 class BackgroundPage extends StatelessWidget {
+  const BackgroundPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -46,7 +47,7 @@ class BackgroundPage extends StatelessWidget {
                       color: Color.fromRGBO(8, 109, 42, 1.0),
                       image: DecorationImage(
                         image: AssetImage("assets/image 1.png"),
-                        opacity: 0.35,
+                        opacity: 0.25,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -82,7 +83,7 @@ class BackgroundPage extends StatelessWidget {
                       color: Color.fromRGBO(15, 211, 80, 1.0),
                       image: DecorationImage(
                         image: AssetImage("assets/image 1.png"),
-                        opacity: 0.35,
+                        opacity: 0.45,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -107,13 +108,13 @@ class BackgroundPage extends StatelessWidget {
                           Text("Connexion",style: TextStyle(fontSize: 35,fontWeight: FontWeight.w100),),
                           SizedBox(height: screenHeight*0.04,),
                           Padding(
-                            padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 12.0,),
+                            padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 10,),
                             child:
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("E-mail",style: TextStyle(fontSize: 17,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
+                                Text("E-mail",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
                                 SizedBox(height: screenHeight*0.006),
                                 Stack(
 
@@ -139,9 +140,9 @@ class BackgroundPage extends StatelessWidget {
                                       decoration: InputDecoration(
                                         border: InputBorder.none, // Supprime les bordures standards
                                         isDense: true, // Réduit l'espace vertical
-                                        contentPadding: EdgeInsets.zero,
+                                        contentPadding: EdgeInsets.only(left: 22,bottom: 10),
                                       ),
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(fontSize: screenWidth * 0.035),
                                     ),
                                   ],
                                 ),
@@ -181,9 +182,9 @@ class BackgroundPage extends StatelessWidget {
                                       decoration: InputDecoration(
                                         border: InputBorder.none, // Supprime les bordures standards
                                         isDense: true, // Réduit l'espace vertical
-                                        contentPadding: EdgeInsets.zero,
+                                        contentPadding: EdgeInsets.only(left: 22,bottom: 10),
                                       ),
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(fontSize: screenWidth * 0.035),
                                     ),
                                   ],
                                 ),
@@ -192,7 +193,6 @@ class BackgroundPage extends StatelessWidget {
                           ),
                           TextButton(
                               onPressed: () {
-                                print("Boutton pressé");
                                 Navigator.of(context).pushNamed('/reset_password');
                               },
                               child: Text("Mot de passe oublié?",
@@ -205,13 +205,13 @@ class BackgroundPage extends StatelessWidget {
                           SizedBox(height: screenHeight*0.015,),
                           ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Color.fromRGBO(8, 109, 42, 1)),
-                                elevation: MaterialStateProperty.all(0),
-                                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                backgroundColor: WidgetStateProperty.all(Color.fromRGBO(8, 109, 42, 1)),
+                                elevation: WidgetStateProperty.all(0),
+                                shape: WidgetStateProperty.all(RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   side: BorderSide(color: Color(0xFF707070), width: 1),
                                 )),
-                                foregroundColor: MaterialStateProperty.all(Colors.white)
+                                foregroundColor: WidgetStateProperty.all(Colors.white)
                             ),
                             onPressed: () {
                               Navigator.of(context).pushNamed('/login');
