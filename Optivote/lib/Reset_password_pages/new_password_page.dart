@@ -22,97 +22,99 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Créer un nouveau mot de passe",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Créer un nouveau mot de passe",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              "Votre nouveau mot de passe doit être différent des anciens, contenir au moins un lettre majuscule, une lettre minuscle, un chiffre et un caractère spécial.",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
+              SizedBox(height: 16),
+              Text(
+                "Votre nouveau mot de passe doit être différent des anciens, contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
               ),
-            ),
-            SizedBox(height: 32),
-            Text(
-              "Nouveau mot de passe",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 32),
+              Text(
+                "Nouveau mot de passe",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 8),
-            TextFormField(
-              obscureText: _obscureTextNewPassword,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureTextNewPassword ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.grey,
+              SizedBox(height: 8),
+              TextFormField(
+                obscureText: _obscureTextNewPassword,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureTextNewPassword ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureTextNewPassword = !_obscureTextNewPassword;
+                      });
+                    },
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureTextNewPassword = !_obscureTextNewPassword;
-                    });
-                  },
                 ),
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              "Confirmer le mot de passe",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 16),
+              Text(
+                "Confirmer le mot de passe",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 8),
-            TextFormField(
-              obscureText: _obscureTextConfirmPassword,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureTextConfirmPassword ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.grey,
+              SizedBox(height: 8),
+              TextFormField(
+                obscureText: _obscureTextConfirmPassword,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureTextConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureTextConfirmPassword = !_obscureTextConfirmPassword;
+                      });
+                    },
                   ),
+                ),
+              ),
+              SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      _obscureTextConfirmPassword = !_obscureTextConfirmPassword;
-                    });
+                    print("Mot de passe changé");
                   },
+                  child: Text("Changer le mot de passe"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF006400),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  print("Mot de passe changé");
-                },
-                child: Text("Changer le mot de passe"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF006400),
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  textStyle: TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
