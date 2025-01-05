@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Welcome_Page extends StatelessWidget {
-  const Welcome_Page({super.key});
+class Welcome extends StatelessWidget {
+  const Welcome({super.key});
 
 
   @override
@@ -11,7 +10,7 @@ class Welcome_Page extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      color: Color.fromRGBO(255, 255, 255, 0),
+      color: Colors.white,
       child: Column(
         children: [
           SizedBox(
@@ -61,13 +60,13 @@ class Welcome_Page extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
-                                elevation: MaterialStateProperty.all(0),
-                                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                backgroundColor: WidgetStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+                                elevation: WidgetStateProperty.all(0),
+                                shape: WidgetStateProperty.all(RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(32),
                                   side: BorderSide(color: Color(0xFF707070), width: 1),
                                 )),
-                                foregroundColor: MaterialStateProperty.all(Colors.black)
+                                foregroundColor: WidgetStateProperty.all(Colors.black)
                             ),
                             onPressed: () {
                               context.push("/connexion");
@@ -82,13 +81,13 @@ class Welcome_Page extends StatelessWidget {
                           SizedBox(width: 15,),
                           ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Color.fromRGBO(14, 128, 52, 0.81)),
-                                elevation: MaterialStateProperty.all(0),
-                                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                backgroundColor: WidgetStateProperty.all(Color.fromRGBO(14, 128, 52, 0.81)),
+                                elevation: WidgetStateProperty.all(0),
+                                shape: WidgetStateProperty.all(RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(32),
                                   side: BorderSide(color: Color(0xFF707070), width: 1),
                                 )),
-                                foregroundColor: MaterialStateProperty.all(Colors.white)
+                                foregroundColor: WidgetStateProperty.all(Colors.white)
                             ),
                             onPressed: () {
                               context.push("/inscription");

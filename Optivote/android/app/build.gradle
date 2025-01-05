@@ -24,8 +24,12 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.optivote"
-    compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    compileSdk 34
+
+    defaultConfig {
+        targetSdk 34
+        // ...
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -64,4 +68,7 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    // ...
+}
