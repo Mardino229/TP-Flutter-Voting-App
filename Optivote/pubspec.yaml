@@ -62,7 +62,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo/
-    - assets/
+    - assets/Group 1000003744.png
+    - assets/image 1.png
+    - assets/image-removebg-preview 1.png
+    - assets/Frame 1000003618.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

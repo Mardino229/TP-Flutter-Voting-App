@@ -5,6 +5,8 @@ import 'Reset_password_pages/reset_password_page1.dart';
 import 'Reset_password_pages/reset_password_page2.dart';
 import 'Reset_password_pages/new_password_page.dart';
 import 'Ajouter_vote/creation_vote.dart';
+import 'user/home_user_page.dart';
+import 'user/detail_user.dart';
 import 'package:optivote/pages/welcome.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,6 +17,7 @@ final _router = GoRouter(
       path: '/',
       builder: (context, state) => Welcome(),
     ),
+    //liens d'authentification
     GoRoute(
       path: '/connexion',
       builder: (context, state) => Login(),
@@ -23,6 +26,7 @@ final _router = GoRouter(
       path: '/inscription',
       builder: (context, state) => Inscription(),
     ),
+    //liens de reset password
     GoRoute(
       path: '/reset_password',
       builder: (context, state) => ResetPasswordPage1(),
@@ -35,9 +39,19 @@ final _router = GoRouter(
       path: '/new_password',
       builder: (context, state) => NewPasswordPage(),
     ),
+    //lien vers la page de création de vote
     GoRoute(
       path: '/creation_vote',
       builder: (context, state) => CreateVotePage(),
+    ),
+    //liens vers les pages user_pages
+    GoRoute(
+      path: '/home_user',
+      builder: (context, state) => HomeUserPage(),
+    ),
+    GoRoute(
+      path: '/detail_vote',
+      builder: (context, state) => DetailUser(),
     ),
   ],
 );
