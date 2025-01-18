@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:optivote/Ajouter_vote/dashboard_vote.dart';
 import 'package:optivote/pages/connexion.dart';
 import 'package:optivote/pages/inscription.dart';
 import 'Reset_password_pages/reset_password_page1.dart';
@@ -43,6 +44,11 @@ final _router = GoRouter(
     GoRoute(
       path: '/creation_vote',
       builder: (context, state) => CreateVotePage(),
+    ),
+    //lien vers la page du dashboard de votes
+    GoRoute(
+      path: '/dashboard_vote',
+      builder: (context, state) => DashboardVote(),
     ),
     //liens vers les pages user_pages
     GoRoute(

@@ -11,7 +11,8 @@ class Welcome extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
       color: Colors.white,
-      child: Column(
+      child:
+      Column(
         children: [
           SizedBox(
             height: screenHeight*0.2,

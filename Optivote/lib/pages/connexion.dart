@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:optivote/Ajouter_vote/creation_vote.dart';
+import 'package:optivote/Ajouter_vote/dashboard_vote.dart';
 
 import '../Reset_password_pages/reset_password_page1.dart';
 import 'inscription.dart';
@@ -19,6 +21,8 @@ class _LoginState extends State<Login> {
       routes:{
         '/inscription':(context) => Inscription(),
         '/reset_password': (context) => ResetPasswordPage1(),
+        '/dashboard_vote': (context)=> DashboardVote(),
+        '/creation_vote': (context)=>CreateVotePage(),
       },
     );
   }
@@ -214,7 +218,7 @@ class BackgroundPage extends StatelessWidget {
                                 foregroundColor: WidgetStateProperty.all(Colors.white)
                             ),
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/login');
+                              Navigator.of(context).pushNamed('/dashboard_vote');
                             },
                             child: Text("Se connecter",
                               style: TextStyle(
