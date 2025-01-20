@@ -1,12 +1,12 @@
-// lib/user/detail_user.dart
+// lib/user/detail_admin.dart
 import 'package:flutter/material.dart';
 
-class DetailUser extends StatefulWidget {
+class DetailAdmin extends StatefulWidget {
   @override
-  _DetailUserState createState() => _DetailUserState();
+  _DetailAdminState createState() => _DetailAdminState();
 }
 
-class _DetailUserState extends State<DetailUser> {
+class _DetailAdminState extends State<DetailAdmin> {
   // Couleur personnalisée pour la bannière
   final Color _darkGreen = Color(0xFF1B5E20); // Exemple de couleur verte foncée
 
@@ -21,7 +21,7 @@ class _DetailUserState extends State<DetailUser> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Détails du scrutin"),
+        title: Text("Détails du scrutin (Admin)"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -170,6 +170,30 @@ class _DetailUserState extends State<DetailUser> {
                 ],
               ),
             ),
+            // Bouton "Clôturer le scrutin"
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Action pour clôturer le scrutin
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, // Couleur rouge
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                icon: Icon(Icons.stop, color: Colors.white), // Icône "stop"
+                label: Text(
+                  "Clôturer le scrutin",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
             // Liste des options de vote (cartes au format de carte bancaire)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),

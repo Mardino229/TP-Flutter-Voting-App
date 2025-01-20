@@ -8,6 +8,7 @@ import 'Reset_password_pages/new_password_page.dart';
 import 'Ajouter_vote/creation_vote.dart';
 import 'user/home_user_page.dart';
 import 'user/detail_user.dart';
+import 'admin/detail_admin.dart';
 import 'package:optivote/pages/welcome.dart';
 import 'package:go_router/go_router.dart';
 
@@ -58,6 +59,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/detail_vote',
       builder: (context, state) => DetailUser(),
+    ),
+    GoRoute(
+      path: '/detail_vote_admin',
+      builder: (context, state) => DetailAdmin(),
     ),
   ],
 );
