@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:optivote/Ajouter_vote/dashboard_vote.dart';
-import 'package:optivote/Ajouter_vote/lol.dart';
 import 'package:optivote/Ajouter_vote/voir_tous_les_votes.dart';
 import 'package:optivote/pages/connexion.dart';
 import 'package:optivote/pages/inscription.dart';
@@ -58,10 +56,6 @@ final _router = GoRouter(
     GoRoute(
       path: '/see_all_vote',
       builder: (context, state) => SeeAllVotes(),
-    ),
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => HomeScreen(),
     ),
     //liens vers les pages user_pages
     GoRoute(
