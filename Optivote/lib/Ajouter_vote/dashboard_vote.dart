@@ -181,7 +181,9 @@ class _DashboardVoteState extends State<DashboardVote> {
                       width: screenWidth * 0.3,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push('/see_all_vote');
+                      },
                       child: Text(
                         "Voir plus",
                         style: TextStyle(

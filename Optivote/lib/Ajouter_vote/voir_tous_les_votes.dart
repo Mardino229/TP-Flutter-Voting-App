@@ -205,6 +205,7 @@ class _SeeAllVotesState extends State<SeeAllVotes> {
                       icon: Icon(Icons.home, size: 40, color: Colors.black),
                       onPressed: () {
                         // Action pour retourner à l'accueil
+                        context.push('/dashboard_vote');
                       },
                     ),
                   ),

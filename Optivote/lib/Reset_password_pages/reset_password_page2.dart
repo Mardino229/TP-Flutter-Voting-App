@@ -48,7 +48,7 @@ class ResetPasswordPage2 extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/new_password');
+                    context.push('/new_password');
                   },
                   child: Text("Vérifier le mail"),
                   style: ElevatedButton.styleFrom(
