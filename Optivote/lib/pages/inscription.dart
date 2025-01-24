@@ -91,7 +91,7 @@ class Insc extends StatelessWidget {
                 children: [
                   Container(
                     width: screenWidth*0.85,
-                    height: screenHeight*0.85,
+                    height: screenHeight*0.6,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16), // Coins arrondis
@@ -100,48 +100,6 @@ class Insc extends StatelessWidget {
                       children: [
                         SizedBox(height: screenHeight*0.03,),
                         Text("Inscription",style: TextStyle(fontSize: screenWidth * 0.09,fontWeight: FontWeight.w100),),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 10,),
-                          child:
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Nom complet",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
-                              SizedBox(height: screenHeight*0.006),
-                              Stack(
-
-                                children: [
-
-                                  Icon(
-                                    Icons.person_outline_outlined, // L'icône au-dessus du champ
-                                    size: 20,
-                                    color: Color.fromRGBO(8, 109, 42, 1),
-                                  ),
-                                  // Le trait de fond
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Container(
-                                      height: 1, // Épaisseur du trait
-                                      color: Color.fromRGBO(8, 109, 42, 1),
-                                    ),
-                                  ),
-                                  // Le champ de texte
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none, // Supprime les bordures standards
-                                      isDense: true, // Réduit l'espace vertical
-                                      contentPadding: EdgeInsets.only(left: 22,bottom: 10),
-                                    ),
-                                    style: TextStyle(fontSize: screenWidth * 0.035),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 10,),
                           child:
@@ -227,58 +185,6 @@ class Insc extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 16,),
-                          child:
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Piece d'identité",style: TextStyle(fontSize: screenWidth * 0.045,color: Color.fromRGBO(8, 109, 42, 1)),textAlign: TextAlign.left,),
-                              SizedBox(height: screenHeight*0.006),
-                              Stack(
-
-                                children: [
-                                  Row(children: [
-                                    Icon(
-                                      Icons.badge_outlined, // L'icône au-dessus du champ
-                                      size: 20,
-                                      color: Color.fromRGBO(8, 109, 42, 1),
-                                    ),
-                                    SizedBox(width: screenWidth*0.56,),
-                                    IconButton(onPressed:(){},
-                                      icon:Icon(
-                                          Icons.drive_folder_upload_outlined,
-                                        size:20,
-                                        color: Color.fromRGBO(8, 109, 42, 1),
-                                      ),
-                                    ),
-                                  ],),
-
-                                  // Le trait de fond
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Container(
-                                      height: 1, // Épaisseur du trait
-                                      color: Color.fromRGBO(8, 109, 42, 1),
-                                    ),
-                                  ),
-                                  // Le champ de texte
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none, // Supprime les bordures standards
-                                      isDense: true, // Réduit l'espace vertical
-                                      contentPadding: EdgeInsets.only(left: 22,bottom: 10),
-                                    ),
-                                    style: TextStyle(fontSize: screenWidth * 0.035),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
                           padding: const EdgeInsets.all(16.0),
                           child:
                           Column(
@@ -320,10 +226,7 @@ class Insc extends StatelessWidget {
                             ],
                           ),
                         ),
-
-
-
-                        SizedBox(height: screenHeight*0.02,),
+                        SizedBox(height: screenHeight*0.05,),
                         ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(Color.fromRGBO(8, 109, 42, 1)),
@@ -343,43 +246,6 @@ class Insc extends StatelessWidget {
                                 fontWeight: FontWeight.w300
                             ),
                           ),
-                        ),
-                        SizedBox(height: screenHeight*0.02,),
-                        Text("OU",style:TextStyle(color:Color.fromRGBO(8, 109, 42, 1),),),
-                        SizedBox(height: screenHeight*0.01,),
-                        Container(
-                          width: screenWidth*0.65,
-                          height: screenHeight*0.045,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                                offset: Offset(0, 5), // Décalage de l'ombre
-                              ),
-                            ],// Coins arrondis
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(width: screenWidth*0.08,height: screenHeight*0.015,),
-                              Image(image: AssetImage("assets/img.png"),height: screenHeight*0.015,),
-                              TextButton(
-                                  onPressed: () {
-
-                                  },
-                                  child: Text("Continuer avec Google?",
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(8, 109, 42, 1),
-                                        fontSize: 15
-                                    ),
-                                  )
-                              ),
-                            ],
-                          ),
-
                         ),
                         SizedBox(height: screenHeight*0.015,),
                         Row(children: [

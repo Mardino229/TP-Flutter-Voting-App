@@ -79,7 +79,7 @@ class _LoginState extends State<Login> {
                   children: [
                     Container(
                       width: screenWidth*0.8,
-                      height: screenHeight*0.62,
+                      height: screenHeight*0.5,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16), // Coins arrondis
@@ -204,43 +204,6 @@ class _LoginState extends State<Login> {
                                   fontWeight: FontWeight.w300
                               ),
                             ),
-                          ),
-                          SizedBox(height: screenHeight*0.026,),
-                          Text("OU",style:TextStyle(color:Color.fromRGBO(8, 109, 42, 1),),),
-                          SizedBox(height: screenHeight*0.026,),
-                          Container(
-                            width: screenWidth*0.65,
-                            height: screenHeight*0.045,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
-                                  offset: Offset(0, 5), // Décalage de l'ombre
-                                ),
-                              ],// Coins arrondis
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(width: screenWidth*0.08,height: screenHeight*0.015,),
-                                Image(image: AssetImage("assets/img.png"),height: screenHeight*0.015,),
-                                TextButton(
-                                    onPressed: () {
-
-                                    },
-                                    child: Text("Continuer avec Google?",
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(8, 109, 42, 1),
-                                          fontSize: 15
-                                      ),
-                                    )
-                                ),
-                              ],
-                            ),
-
                           ),
                           SizedBox(height: screenHeight*0.026,),
                           Row(children: [

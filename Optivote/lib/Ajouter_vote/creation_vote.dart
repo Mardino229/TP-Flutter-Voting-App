@@ -33,7 +33,6 @@ class _CreateVotePageState extends State<CreateVotePage> {
             _buildHeader(),
             _buildCalendar(),
             _buildVoteForm(),
-            _buildVotersSection(),
             _buildVoteOptions(),
             _buildCreateButton(),
             _buildHomeBanner(),
@@ -195,74 +194,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
             decoration: InputDecoration(labelText: "Titre"),
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: "Description"),
-          ),
-          DropdownButtonFormField<String>(
-            items: ["Type 1", "Type 2", "Type 3"].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (value) {
-              // Action pour sélectionner un type
-            },
-            decoration: InputDecoration(labelText: "Type"),
-          ),
-          TextFormField(
             decoration: InputDecoration(labelText: "Date de fin"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Section 4 : Section des votants
-  Widget _buildVotersSection() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16),
-            color: _darkGreen,
-            child: Text(
-              "Votants",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Text("Âge minimum : "),
-              IconButton(
-                icon: Icon(Icons.arrow_drop_up),
-                onPressed: () {
-                  setState(() {
-                    minAge++;
-                  });
-                },
-              ),
-              Text("$minAge"),
-              IconButton(
-                icon: Icon(Icons.arrow_drop_down),
-                onPressed: () {
-                  setState(() {
-                    minAge--;
-                  });
-                },
-              ),
-            ],
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: "Localisation"),
-            onChanged: (value) {
-              setState(() {
-                location = value;
-              });
-            },
           ),
         ],
       ),
