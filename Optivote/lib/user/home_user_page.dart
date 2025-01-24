@@ -1,4 +1,3 @@
-// lib/user/home_user_page.dart
 import 'package:flutter/material.dart';
 
 class HomeUserPage extends StatelessWidget {
@@ -12,7 +11,9 @@ class HomeUserPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,

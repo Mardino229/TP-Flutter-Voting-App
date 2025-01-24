@@ -53,6 +53,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
               // Action pour retourner en arrière à mettre ici
+              Navigator.of(context).pop();
             },
           ),
           SizedBox(width: 8),

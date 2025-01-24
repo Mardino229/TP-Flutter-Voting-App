@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardVote extends StatefulWidget {
   const DashboardVote({super.key});
@@ -293,32 +294,6 @@ class _DashboardVoteState extends State<DashboardVote> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                        Color.fromRGBO(255, 255, 255, 1)),
-                    elevation: WidgetStateProperty.all(0),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
-                        side: BorderSide(color: Color(0xFF707070), width: 1),
-                      ),
-                    ),
-                    foregroundColor: WidgetStateProperty.all(Colors.black),
-                    fixedSize: WidgetStateProperty.all(Size(screenWidth * 0.4,
-                        screenHeight * 0.065)), // Taille fixe
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    "Gérer les utilisateurs",
-                    style: TextStyle(
-                        fontSize: screenWidth * 0.03,
-                        fontWeight: FontWeight.w100),
-                  ),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
                           Color.fromRGBO(14, 128, 52, 1)),
                       elevation: WidgetStateProperty.all(0),
@@ -327,9 +302,11 @@ class _DashboardVoteState extends State<DashboardVote> {
                         side: BorderSide(color: Color(0xFF707070), width: 1),
                       )),
                       fixedSize: WidgetStateProperty.all(
-                          Size(screenWidth * 0.4, screenHeight * 0.065)),
+                          Size(screenWidth * 0.8, screenHeight * 0.065)),
                       foregroundColor: WidgetStateProperty.all(Colors.white)),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push("/creation_vote");
+                  },
                   child: Text(
                     "Ajouter un vote",
                     style: TextStyle(

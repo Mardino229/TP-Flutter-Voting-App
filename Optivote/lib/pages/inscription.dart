@@ -335,6 +335,7 @@ class Insc extends StatelessWidget {
                               foregroundColor: WidgetStateProperty.all(Colors.white)
                           ),
                           onPressed: () {
+                            context.push('/home_user');
                           },
                           child: Text("S'inscrire",
                             style: TextStyle(

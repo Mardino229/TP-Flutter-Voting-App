@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:optivote/Ajouter_vote/creation_vote.dart';
-import 'package:optivote/Ajouter_vote/dashboard_vote.dart';
-
-import '../Reset_password_pages/reset_password_page1.dart';
-import 'inscription.dart';
+import 'package:go_router/go_router.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,24 +9,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: BackgroundPage(),
-      debugShowCheckedModeBanner: false,
-      routes:{
-        '/inscription':(context) => Inscription(),
-        '/reset_password': (context) => ResetPasswordPage1(),
-        '/dashboard_vote': (context)=> DashboardVote(),
-        '/creation_vote': (context)=>CreateVotePage(),
-      },
-    );
-  }
-}
-
-class BackgroundPage extends StatelessWidget {
-  const BackgroundPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -197,7 +175,7 @@ class BackgroundPage extends StatelessWidget {
                           ),
                           TextButton(
                               onPressed: () {
-                                Navigator.of(context).pushNamed('/reset_password');
+                                context.push('/reset_password');
                               },
                               child: Text("Mot de passe oublié?",
                                 style: TextStyle(
@@ -218,7 +196,7 @@ class BackgroundPage extends StatelessWidget {
                                 foregroundColor: WidgetStateProperty.all(Colors.white)
                             ),
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/dashboard_vote');
+                              context.push('/home_user');
                             },
                             child: Text("Se connecter",
                               style: TextStyle(
@@ -271,7 +249,7 @@ class BackgroundPage extends StatelessWidget {
                             TextButton(
                                 onPressed: ()
                                 {
-                                  Navigator.of(context).pushNamed('/inscription');
+                                  context.push('/inscription');
                                 },
                                 child: Text("S'inscrire",
                                   style: TextStyle(
