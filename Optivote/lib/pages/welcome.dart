@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

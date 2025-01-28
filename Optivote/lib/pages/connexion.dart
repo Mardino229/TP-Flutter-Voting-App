@@ -1,5 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../data/models/authentificated_user.dart';
+import '../data/services/authentificate_service.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,9 +19,82 @@ class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool loading = false;
+  final userService = AuthentificateService();
 
   String? _emailError;
   String? _passwordError;
+
+  loginUser() async {
+    if (_validateForm()) {
+      setState(() {
+        loading = true;
+      });
+      try {
+
+        Map<String, dynamic> data = {
+          'email': _emailController.text,
+          'password': _passwordController.text
+        };
+        final response = await userService.login(data);
+
+        if (response["success"]){
+          AuthenticatedUser authUser = AuthenticatedUser.fromJson(response["body"]);
+
+          Fluttertoast.showToast(msg: "Utilisateur connecté avec succès");
+          // Initialiser une instance de shared preference
+          final sharedPref = await SharedPreferences.getInstance();
+
+          // Sauvegerder le token en mémoire
+          sharedPref.setString("token", authUser.accessToken!);
+          sharedPref.setInt("npi", authUser.npi!);
+          sharedPref.setInt("id", authUser.id!);
+          if (authUser.role=="user"){
+            context.push("/home_user");
+          }else{
+            context.push("/dashboard_vote");
+          }
+        } else {
+          setState(() {
+            _passwordError = response["message"];
+          });
+        }
+        // dispose();
+
+      } on DioException catch (e) {
+
+        if (e.response != null) {
+          print(e.response?.data["errors"]);
+          final errors = e.response?.data['errors'];
+          errors.forEach((key, value) {
+            print('$key: $value'); // Affiche chaque erreur
+          });
+          //
+          // print(formattedErrors);
+          // Map<String, String> errors = e.response?.data["errors"];
+
+          setState(() {
+            _emailError =errors["email"]==null?"": errors["email"][0].toString();
+            _passwordError = errors["password"]==null?"":errors["password"][0].toString();
+          });
+
+          print(e.response?.statusCode);
+        } else {
+          // Something happened in setting up or sending the request that triggered an Error
+          print(e.requestOptions);
+          print(e.message);
+        }
+
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+      } finally {
+        setState(() {
+          loading = false;
+        });
+      }
+
+    }
+  }
 
   @override
   void dispose() {
@@ -30,10 +109,10 @@ class _LoginState extends State<Login> {
   }
 
   bool _validatePassword(String password) {
-    return password.length >= 8;
+    return password.isNotEmpty;
   }
 
-  void _validateForm() {
+  bool _validateForm() {
     setState(() {
       // Validation email
       _emailError = !_validateEmail(_emailController.text)
@@ -42,13 +121,14 @@ class _LoginState extends State<Login> {
 
       // Validation mot de passe
       _passwordError = !_validatePassword(_passwordController.text)
-          ? "Le mot de passe doit contenir au moins 8 caractères"
+          ? "Ce champ est obligatoire"
           : null;
 
-      if (_emailError == null && _passwordError == null) {
-        context.push('/home_user');
-      }
+      // if (_emailError == null && _npiError == null && _passwordError == null) {
+      //   context.push('/home_user');
+      // }
     });
+    return _validateEmail(_emailController.text)&&_validatePassword(_passwordController.text);
   }
 
   @override
@@ -294,13 +374,20 @@ class _LoginState extends State<Login> {
                                   )),
                                   foregroundColor:
                                       WidgetStateProperty.all(Colors.white)),
-                              onPressed: _validateForm,
-                              child: Text(
+                              onPressed: loginUser,
+                              child:!loading? Text(
                                 "Se connecter",
                                 style: TextStyle(
                                     fontSize: screenWidth * 0.045,
                                     fontWeight: FontWeight.w300),
+                              ):  SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: Colors.white,
                               ),
+                            ),
                             ),
                             SizedBox(
                               height: screenHeight * 0.026,
