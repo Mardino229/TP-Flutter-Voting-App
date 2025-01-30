@@ -189,7 +189,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
       decoration: BoxDecoration(
         color: _darkGreen,
         borderRadius:
-            BorderRadius.vertical(top: Radius.circular(20)), // Bords arrondis
+            BorderRadius.vertical(top: Radius.circular(19)), // Bords arrondis
       ),
       child: Stack(
         alignment: Alignment.topCenter,
