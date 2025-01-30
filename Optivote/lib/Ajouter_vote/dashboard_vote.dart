@@ -23,35 +23,44 @@ class _DashboardVoteState extends State<DashboardVote> {
         children: [
           SizedBox(
             height: screenHeight * 0.015,
+            width: screenWidth*0.2,
           ),
+
           Center(
-            child: Container(
-              width: screenWidth * 0.8,
-              height: screenHeight * 0.055,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 10,
-                    spreadRadius: 2,
-                    offset: Offset(0, 5), // Décalage de l'ombre
+            child:Row(
+              children: [
+                SizedBox(width: screenWidth*0.045,),
+                Container(
+                  width: screenWidth * 0.8,
+                  height: screenHeight * 0.055,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                        offset: Offset(0, 5), // Décalage de l'ombre
+                      ),
+                    ], // Coins arrondis
                   ),
-                ], // Coins arrondis
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: screenWidth * 0.05, top: screenHeight * 0.01),
-                child: Text(
-                  "Votes",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: screenWidth * 0.07,
-                    fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: screenWidth * 0.05, top: screenHeight * 0.01),
+                    child: Text(
+                      "Votes",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: screenWidth * 0.07,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                IconButton(onPressed: ()=>_showAlertDialog(context)
+                    , icon:Icon(Icons.logout,color: Colors.red,))
+              ],
             ),
           ),
           SizedBox(
@@ -63,7 +72,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                   .none, // Permet au CircleAvatar de dépasser les limites du Container
               children: [
                 Container(
-                    width: screenWidth * 0.8,
+                    width: screenWidth * 0.9,
                     height: screenHeight * 0.32,
                     decoration: BoxDecoration(
                       image: DecorationImage(
@@ -73,7 +82,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.only(
-                          left: screenWidth * 0.08, top: screenHeight * 0.04),
+                          left: screenWidth * 0.04, top: screenHeight * 0.04),
                       child: Text(
                         "Hello !\nWelcome back here.",
                         style: TextStyle(
@@ -85,7 +94,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                     )),
                 Positioned(
                   top: screenHeight * 0.187, // Décalage vers le haut
-                  left: screenWidth * 0.25, // Décalage vers la gauche
+                  left: screenWidth * 0.3, // Décalage vers la gauche
                   child: CircleAvatar(
                     radius: screenWidth * 0.13,
                     backgroundColor: Colors.white,
@@ -100,7 +109,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                   left: screenWidth * 0.025,
                   // Décalage vers la gauche
                   child: Container(
-                    width: screenWidth * 0.75,
+                    width: screenWidth * 0.85,
                     height: screenHeight * 0.06,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -126,7 +135,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                           style: TextStyle(fontSize: screenWidth * 0.02),
                         ),
                         SizedBox(
-                          width: screenWidth * 0.3,
+                          width: screenWidth * 0.4,
                         ),
                         Icon(
                           Icons.person_outline_outlined,
@@ -151,7 +160,7 @@ class _DashboardVoteState extends State<DashboardVote> {
           ),
           Center(
             child: Container(
-              width: screenWidth * 0.8,
+              width: screenWidth * 0.9,
               height: screenHeight * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -178,7 +187,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                           fontWeight: FontWeight.w100,
                         )),
                     SizedBox(
-                      width: screenWidth * 0.3,
+                      width: screenWidth * 0.4,
                     ),
                     TextButton(
                       onPressed: () {
@@ -230,7 +239,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                             ],
                           )),
                       SizedBox(
-                        width: screenWidth * 0.05,
+                        width: screenWidth * 0.15,
                       ),
                       ElevatedButton(
                           style: ButtonStyle(
@@ -250,9 +259,9 @@ class _DashboardVoteState extends State<DashboardVote> {
                           onPressed: () {},
                           child: Row(
                             children: [
-                              Icon(Icons.hourglass_empty),
+                              Icon(Icons.hourglass_full),
                               Text(
-                                "En attente",
+                                "Terminé",
                                 style: TextStyle(
                                     fontSize: screenWidth * 0.03,
                                     fontWeight: FontWeight.w100),
@@ -269,18 +278,23 @@ class _DashboardVoteState extends State<DashboardVote> {
                         nomElection.length,
                         (index) => Card(
                           //margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            children: [
-                              Image(image: AssetImage("assets/img2.png"),height: screenHeight*0.08,),
-                              Column(
-                                children: [
-                                  Text(nomElection[index],style: TextStyle(fontSize: screenWidth*0.04,fontWeight: FontWeight.bold),),
-                                  Text(periode[index],style: TextStyle(fontSize: screenWidth*0.04,)),
-                                ],
-                              ),
+                          color: Color.fromRGBO(255, 255, 255, 0.9),
+                          child: GestureDetector(
+                            onTap:(){},
+                            child:Row(
+                              children: [
+                                Image(image: AssetImage("assets/img2.png"),height: screenHeight*0.08,),
+                                Column(
+                                  children: [
+                                    Text(nomElection[index],style: TextStyle(fontSize: screenWidth*0.04,fontWeight: FontWeight.bold),),
+                                    Text(periode[index],style: TextStyle(fontSize: screenWidth*0.04,)),
+                                  ],
+                                ),
 
-                            ],
-                          ),
+                              ],
+                            )
+                          )
+
                           ),
                         ),
                       ),
@@ -291,7 +305,7 @@ class _DashboardVoteState extends State<DashboardVote> {
           ),
           Container(
             padding: EdgeInsets.only(
-                left: screenWidth * 0.1, top: screenHeight * 0.025),
+                left: screenWidth * 0.15, top: screenHeight * 0.025),
             child: Row(
               children: [
                 ElevatedButton(
@@ -299,25 +313,25 @@ class _DashboardVoteState extends State<DashboardVote> {
                       backgroundColor: WidgetStateProperty.all(
                           Color.fromRGBO(14, 128, 52, 1)),
                       elevation: WidgetStateProperty.all(0),
-                      shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
-                        side: BorderSide(color: Color(0xFF707070), width: 1),
-                      )),
-                      fixedSize: WidgetStateProperty.all(
-                          Size(screenWidth * 0.8, screenHeight * 0.065)),
-                      foregroundColor: WidgetStateProperty.all(Colors.white)),
-                  onPressed: () {
-                    context.push("/creation_vote");
+                      shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                            side: BorderSide(
+                                color: Color(0xFF707070), width: 1),
+                          )),
+                      foregroundColor:
+                      WidgetStateProperty.all(Colors.white)),
+                  onPressed:(){
+                    context.push('/creation_vote');
                   },
-                  child: Text(
-                    "Ajouter un vote",
-                    style: TextStyle(
-                        fontSize: screenWidth * 0.04,
-                        fontWeight: FontWeight.w100),
-                  ),
+                  child: Row(children: [
+                   Icon(Icons.add),
+                    Text("Créer une élection",style: TextStyle(color:Colors.white,fontSize: screenWidth*0.06,),),
+                  ],),
                 ),
-              ],
-            ),
+
+                ],
+            )
           ),
           SizedBox(
             height: screenHeight * 0.03,
@@ -374,6 +388,34 @@ class _DashboardVoteState extends State<DashboardVote> {
           )),
         ],
       ),
+    );
+  }
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Déconnexion"),
+          content: Text("Voulez-vous vraiment continuer ?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fermer la boîte de dialogue
+              },
+              child: Text("Annuler"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Action à effectuer
+                context.go('/');
+
+                print("Action confirmée !");
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

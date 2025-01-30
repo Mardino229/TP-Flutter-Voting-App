@@ -6,43 +6,36 @@ class CreateVotePage extends StatefulWidget {
 }
 
 class _CreateVotePageState extends State<CreateVotePage> {
-  DateTime _selectedDay = DateTime.now(); // Jour sélectionné
-  DateTime _currentMonth = DateTime.now(); // Mois actuellement affiché
+  DateTime? _startDate; // Date de début
+  DateTime? _endDate; // Date de fin
   int minAge = 18; // Âge minimum requis pour voter
   String location = ""; // Localisation des votants
 
   final Color _darkGreen = Color(0xFF006400);
 
-  // Liste des jours de la semaine
-  final List<String> _daysOfWeek = [
-    "Lun",
-    "Mar",
-    "Mer",
-    "Jeu",
-    "Ven",
-    "Sam",
-    "Dim"
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildCalendar(),
-            _buildVoteForm(),
-            _buildVoteOptions(),
-            _buildCreateButton(),
-            _buildHomeBanner(),
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildVoteForm(),
+                  _buildCreateButton(),
+                ],
+              ),
+            ),
+          ),
+          _buildHomeBanner(), // Bannière en bas
+        ],
       ),
     );
   }
 
-  // Section 1 : Bouton de retour et titre "Créer un vote"
+  // Section 1 : Bouton de retour et titre "Créer une élection"
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -57,112 +50,8 @@ class _CreateVotePageState extends State<CreateVotePage> {
           ),
           SizedBox(width: 8),
           Text(
-            "Créer un vote",
+            "Créer une élection", // Changement du titre
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Section 2 : Calendrier défilant
-  Widget _buildCalendar() {
-    // Nombre de jours dans le mois actuel
-    int daysInMonth =
-        DateTime(_currentMonth.year, _currentMonth.month + 1, 0).day;
-
-    // Premier jour du mois
-    DateTime firstDayOfMonth =
-        DateTime(_currentMonth.year, _currentMonth.month, 1);
-
-    // Jour de la semaine du premier jour du mois (0 = Lundi, 6 = Dimanche)
-    int startingWeekday = firstDayOfMonth.weekday - 1;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        children: [
-          // Mois et année avec flèches de navigation
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  setState(() {
-                    _currentMonth =
-                        DateTime(_currentMonth.year, _currentMonth.month - 1);
-                  });
-                },
-              ),
-              Text(
-                "${_getMonthName(_currentMonth.month)} ${_currentMonth.year}",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  setState(() {
-                    _currentMonth =
-                        DateTime(_currentMonth.year, _currentMonth.month + 1);
-                  });
-                },
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          // Grille des jours de la semaine et des dates
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              childAspectRatio: 1.0,
-            ),
-            itemCount: _daysOfWeek.length + daysInMonth + startingWeekday,
-            itemBuilder: (context, index) {
-              if (index < _daysOfWeek.length) {
-                // Afficher les jours de la semaine
-                return Center(
-                  child: Text(
-                    _daysOfWeek[index],
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                );
-              } else if (index < _daysOfWeek.length + startingWeekday) {
-                // Cases vides avant le premier jour du mois
-                return Container();
-              } else {
-                // Afficher les jours du mois
-                int day = index - _daysOfWeek.length - startingWeekday + 1;
-                bool isSelected = _selectedDay.day == day &&
-                    _selectedDay.month == _currentMonth.month;
-
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedDay = DateTime(
-                          _currentMonth.year, _currentMonth.month, day);
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: isSelected ? _darkGreen : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "$day",
-                        style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-            },
           ),
         ],
       ),
@@ -181,46 +70,68 @@ class _CreateVotePageState extends State<CreateVotePage> {
             padding: EdgeInsets.all(16),
             color: _darkGreen,
             child: Text(
-              "Vote",
+              "Élection", // Changement du titre
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
           ),
           SizedBox(height: 8),
-          Text(
-            "${_selectedDay.day}/${_selectedDay.month}/${_selectedDay.year}",
-            style: TextStyle(fontSize: 16),
-          ),
           TextFormField(
             decoration: InputDecoration(labelText: "Titre"),
           ),
-          TextFormField(
-            decoration: InputDecoration(labelText: "Date de fin"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Section 5 : Options de vote
-  Widget _buildVoteOptions() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16),
-            color: _darkGreen,
-            child: Text(
-              "Options de vote",
-              style: TextStyle(color: Colors.white, fontSize: 18),
+          SizedBox(height: 16),
+          // Champ pour la date de début avec sélecteur de date
+          InkWell(
+            onTap: () async {
+              final DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: _startDate ?? DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2100),
+              );
+              if (pickedDate != null) {
+                setState(() {
+                  _startDate = pickedDate;
+                });
+              }
+            },
+            child: InputDecorator(
+              decoration: InputDecoration(
+                labelText: "Date de début",
+              ),
+              child: Text(
+                _startDate != null
+                    ? "${_startDate!.day}/${_startDate!.month}/${_startDate!.year}"
+                    : "Sélectionnez une date",
+              ),
             ),
           ),
-          SizedBox(height: 8),
-          TextFormField(decoration: InputDecoration(labelText: "Option 1")),
-          TextFormField(decoration: InputDecoration(labelText: "Option 2")),
-          TextFormField(decoration: InputDecoration(labelText: "Option 3")),
+          SizedBox(height: 16),
+          // Champ pour la date de fin avec sélecteur de date
+          InkWell(
+            onTap: () async {
+              final DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: _endDate ?? DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2100),
+              );
+              if (pickedDate != null) {
+                setState(() {
+                  _endDate = pickedDate;
+                });
+              }
+            },
+            child: InputDecorator(
+              decoration: InputDecoration(
+                labelText: "Date de fin",
+              ),
+              child: Text(
+                _endDate != null
+                    ? "${_endDate!.day}/${_endDate!.month}/${_endDate!.year}"
+                    : "Sélectionnez une date",
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -247,7 +158,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
                       Icon(Icons.check_circle, color: _darkGreen, size: 50),
                       SizedBox(height: 16),
                       Text(
-                          "Votre vote a bien été créé ! Optivote vous permet de le suivre."),
+                          "Votre élection a bien été créée ! Optivote vous permet de la suivre."),
                     ],
                   ),
                   actions: [
@@ -263,7 +174,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
             );
           },
           child: Text(
-            "Créer le vote",
+            "Créer l'élection", // Changement du texte du bouton
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -278,7 +189,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
       decoration: BoxDecoration(
         color: _darkGreen,
         borderRadius:
-            BorderRadius.vertical(top: Radius.circular(20)), // Bords arrondis
+            BorderRadius.vertical(top: Radius.circular(19)), // Bords arrondis
       ),
       child: Stack(
         alignment: Alignment.topCenter,
@@ -294,7 +205,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
               child: IconButton(
                 icon: Icon(Icons.home, size: 40, color: Colors.black),
                 onPressed: () {
-                  // Action pour retourner à l'accueil
+                  // Navigation vers la page Welcome
                 },
               ),
             ),
@@ -302,37 +213,5 @@ class _CreateVotePageState extends State<CreateVotePage> {
         ],
       ),
     );
-  }
-
-  // Méthode pour obtenir le nom du mois
-  String _getMonthName(int month) {
-    switch (month) {
-      case 1:
-        return "Janvier";
-      case 2:
-        return "Février";
-      case 3:
-        return "Mars";
-      case 4:
-        return "Avril";
-      case 5:
-        return "Mai";
-      case 6:
-        return "Juin";
-      case 7:
-        return "Juillet";
-      case 8:
-        return "Août";
-      case 9:
-        return "Septembre";
-      case 10:
-        return "Octobre";
-      case 11:
-        return "Novembre";
-      case 12:
-        return "Décembre";
-      default:
-        return "";
-    }
   }
 }
