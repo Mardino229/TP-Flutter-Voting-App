@@ -279,18 +279,22 @@ class _DashboardVoteState extends State<DashboardVote> {
                         (index) => Card(
                           //margin: const EdgeInsets.symmetric(vertical: 8.0),
                           color: Color.fromRGBO(255, 255, 255, 0.9),
-                          child: Row(
-                            children: [
-                              Image(image: AssetImage("assets/img2.png"),height: screenHeight*0.08,),
-                              Column(
-                                children: [
-                                  Text(nomElection[index],style: TextStyle(fontSize: screenWidth*0.04,fontWeight: FontWeight.bold),),
-                                  Text(periode[index],style: TextStyle(fontSize: screenWidth*0.04,)),
-                                ],
-                              ),
+                          child: GestureDetector(
+                            onTap:(){},
+                            child:Row(
+                              children: [
+                                Image(image: AssetImage("assets/img2.png"),height: screenHeight*0.08,),
+                                Column(
+                                  children: [
+                                    Text(nomElection[index],style: TextStyle(fontSize: screenWidth*0.04,fontWeight: FontWeight.bold),),
+                                    Text(periode[index],style: TextStyle(fontSize: screenWidth*0.04,)),
+                                  ],
+                                ),
 
-                            ],
-                          ),
+                              ],
+                            )
+                          )
+
                           ),
                         ),
                       ),
@@ -301,7 +305,7 @@ class _DashboardVoteState extends State<DashboardVote> {
           ),
           Container(
             padding: EdgeInsets.only(
-                left: screenWidth * 0.2, top: screenHeight * 0.025),
+                left: screenWidth * 0.15, top: screenHeight * 0.025),
             child: Row(
               children: [
                 ElevatedButton(
@@ -309,25 +313,25 @@ class _DashboardVoteState extends State<DashboardVote> {
                       backgroundColor: WidgetStateProperty.all(
                           Color.fromRGBO(14, 128, 52, 1)),
                       elevation: WidgetStateProperty.all(0),
-                      shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
-                        side: BorderSide(color: Color(0xFF707070), width: 1),
-                      )),
-                      fixedSize: WidgetStateProperty.all(
-                          Size(screenWidth * 0.6, screenHeight * 0.065)),
-                      foregroundColor: WidgetStateProperty.all(Colors.white)),
-                  onPressed: () {
-                    context.push("/creation_vote");
+                      shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                            side: BorderSide(
+                                color: Color(0xFF707070), width: 1),
+                          )),
+                      foregroundColor:
+                      WidgetStateProperty.all(Colors.white)),
+                  onPressed:(){
+                    context.push('/creation_vote');
                   },
-                  child: Text(
-                    "Ajouter un vote",
-                    style: TextStyle(
-                        fontSize: screenWidth * 0.04,
-                        fontWeight: FontWeight.w100),
-                  ),
+                  child: Row(children: [
+                   Icon(Icons.add),
+                    Text("Créer une élection",style: TextStyle(color:Colors.white,fontSize: screenWidth*0.06,),),
+                  ],),
                 ),
-              ],
-            ),
+
+                ],
+            )
           ),
           SizedBox(
             height: screenHeight * 0.03,
