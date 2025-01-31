@@ -49,7 +49,7 @@ class _DashboardVoteState extends State<DashboardVote> {
                     padding: EdgeInsets.only(
                         left: screenWidth * 0.05, top: screenHeight * 0.01),
                     child: Text(
-                      "Votes",
+                      "Election",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: screenWidth * 0.07,
@@ -305,29 +305,17 @@ class _DashboardVoteState extends State<DashboardVote> {
           ),
           Container(
             padding: EdgeInsets.only(
-                left: screenWidth * 0.15, top: screenHeight * 0.025),
+                left: screenWidth * 0.6, top: screenHeight * 0.025),
             child: Row(
               children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                          Color.fromRGBO(14, 128, 52, 1)),
-                      elevation: WidgetStateProperty.all(0),
-                      shape: WidgetStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
-                            side: BorderSide(
-                                color: Color(0xFF707070), width: 1),
-                          )),
-                      foregroundColor:
-                      WidgetStateProperty.all(Colors.white)),
-                  onPressed:(){
+                FloatingActionButton.extended(
+                  onPressed: (){
                     context.push('/creation_vote');
                   },
-                  child: Row(children: [
-                   Icon(Icons.add),
-                    Text("Créer une élection",style: TextStyle(color:Colors.white,fontSize: screenWidth*0.06,),),
-                  ],),
+                  backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+                  tooltip: 'Increment',
+                  icon: Icon(Icons.add,color: Colors.white,),
+                  label: Text("Créer un vote",style: TextStyle(color: Colors.white),),
                 ),
 
                 ],
