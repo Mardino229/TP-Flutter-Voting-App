@@ -16,16 +16,21 @@ class _CreateVotePageState extends State<CreateVotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildVoteForm(),
-            _buildVoteOptions(),
-            _buildCreateButton(),
-            _buildHomeBanner(),
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildVoteForm(),
+                  _buildCreateButton(),
+                ],
+              ),
+            ),
+          ),
+          _buildHomeBanner(), // Bannière en bas
+        ],
       ),
     );
   }
@@ -132,31 +137,6 @@ class _CreateVotePageState extends State<CreateVotePage> {
     );
   }
 
-  // Section 5 : Options de vote
-  Widget _buildVoteOptions() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16),
-            color: _darkGreen,
-            child: Text(
-              "Options de l'élection",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-          ),
-          SizedBox(height: 8),
-          TextFormField(decoration: InputDecoration(labelText: "Option 1")),
-          TextFormField(decoration: InputDecoration(labelText: "Option 2")),
-          TextFormField(decoration: InputDecoration(labelText: "Option 3")),
-        ],
-      ),
-    );
-  }
-
   // Section 6 : Bouton de création
   Widget _buildCreateButton() {
     return Padding(
@@ -209,7 +189,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
       decoration: BoxDecoration(
         color: _darkGreen,
         borderRadius:
-            BorderRadius.vertical(top: Radius.circular(20)), // Bords arrondis
+            BorderRadius.vertical(top: Radius.circular(19)), // Bords arrondis
       ),
       child: Stack(
         alignment: Alignment.topCenter,
@@ -225,7 +205,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
               child: IconButton(
                 icon: Icon(Icons.home, size: 40, color: Colors.black),
                 onPressed: () {
-                  // Action pour retourner à l'accueil
+                  // Navigation vers la page Welcome
                 },
               ),
             ),
