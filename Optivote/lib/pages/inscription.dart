@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+
+import '../data/services/authentificate_service.dart';
 
 class Inscription extends StatefulWidget {
   const Inscription({super.key});
@@ -31,10 +35,99 @@ class _InscState extends State<Insc> {
   final _npiController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool loading = false;
+  final userService = AuthentificateService();
 
   String? _emailError;
   String? _npiError;
   String? _passwordError;
+
+  createUser() async {
+    if (_validateForm()) {
+    setState(() {
+      loading = true;
+    });
+    try {
+
+      Map<String, dynamic> data = {
+        'email': _emailController.text,
+        'npi': _npiController.text,
+        'password': _passwordController.text
+      };
+      final response = await userService.register(data);
+
+      if(response["success"]){
+        _showMyDialog(response["message"]);
+      } else{
+        Fluttertoast.showToast(msg: "Une erreur est survenue durant l'inscription");
+        setState(() {
+          _npiError =response["message"];
+          loading = false;
+        });
+      }
+    } on DioException catch (e) {
+      print(e.response);
+      if (e.response != null) {
+        print(e.response?.data["errors"]);
+        final errors = e.response?.data['errors'];
+        errors.forEach((key, value) {
+          print('$key: $value'); // Affiche chaque erreur
+        });
+        //
+        // print(formattedErrors);
+        // Map<String, String> errors = e.response?.data["errors"];
+
+        setState(() {
+          _npiError = errors["npi"]==null?"":errors["npi"][0].toString();
+          _emailError =errors["email"]==null?"": errors["email"][0].toString();
+          _passwordError = errors["password"]==null?"":errors["password"][0].toString();
+        });
+
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+
+  }
+  }
+
+  Future<void> _showMyDialog(String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(''),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(message),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Se connecter'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.push("/connexion");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -50,14 +143,14 @@ class _InscState extends State<Insc> {
   }
 
   bool _validateNPI(String npi) {
-    return npi.length == 8 && int.tryParse(npi) != null;
+    return npi.length == 10 && int.tryParse(npi) != null;
   }
 
   bool _validatePassword(String password) {
     return password.length >= 8;
   }
 
-  void _validateForm() {
+  bool _validateForm() {
     setState(() {
       // Validation email
       _emailError = !_validateEmail(_emailController.text)
@@ -74,10 +167,11 @@ class _InscState extends State<Insc> {
           ? "Le mot de passe doit contenir au moins 8 caractères"
           : null;
 
-      if (_emailError == null && _npiError == null && _passwordError == null) {
-        context.push('/home_user');
-      }
+      // if (_emailError == null && _npiError == null && _passwordError == null) {
+      //   context.push('/home_user');
+      // }
     });
+    return _validateEmail(_emailController.text)&&_validateNPI(_npiController.text)&&_validatePassword(_passwordController.text);
   }
 
   @override
@@ -275,7 +369,7 @@ class _InscState extends State<Insc> {
                                         style: TextStyle(
                                             fontSize: screenWidth * 0.035),
                                         keyboardType: TextInputType.number,
-                                        maxLength: 8,
+                                        maxLength: 10,
                                       ),
                                     ],
                                   ),
@@ -364,12 +458,19 @@ class _InscState extends State<Insc> {
                                   )),
                                   foregroundColor:
                                       WidgetStateProperty.all(Colors.white)),
-                              onPressed: _validateForm,
-                              child: Text(
+                              onPressed: createUser,
+                              child: !loading? Text(
                                 "S'inscrire",
                                 style: TextStyle(
                                     fontSize: screenWidth * 0.045,
                                     fontWeight: FontWeight.w300),
+                              ):  SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                             SizedBox(

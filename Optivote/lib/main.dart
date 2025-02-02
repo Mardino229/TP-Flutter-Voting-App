@@ -39,8 +39,12 @@ final _router = GoRouter(
       builder: (context, state) => ResetPasswordPage2(),
     ),
     GoRoute(
-      path: '/new_password',
-      builder: (context, state) => NewPasswordPage(),
+      path: '/new_password/:email',
+      // builder: (context, state) => NewPasswordPage(),
+      builder: (context, state) {
+        final String email = state.pathParameters['email']!;
+        return NewPasswordPage(email: email);
+      },
     ),
     //lien vers la page de création de vote
     GoRoute(
