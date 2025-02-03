@@ -215,3 +215,4 @@ class _CreateVotePageState extends State<CreateVotePage> {
     );
   }
 }
+
