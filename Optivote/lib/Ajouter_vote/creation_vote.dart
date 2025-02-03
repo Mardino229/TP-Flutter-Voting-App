@@ -1,4 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:optivote/data/models/election.dart';
+import 'package:optivote/data/services/election_service.dart';
 
 class CreateVotePage extends StatefulWidget {
   @override
@@ -8,10 +14,72 @@ class CreateVotePage extends StatefulWidget {
 class _CreateVotePageState extends State<CreateVotePage> {
   DateTime? _startDate; // Date de début
   DateTime? _endDate; // Date de fin
-  int minAge = 18; // Âge minimum requis pour voter
-  String location = ""; // Localisation des votants
-
+  bool loading = false;
+  final _titreController = TextEditingController();
+  final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
   final Color _darkGreen = Color(0xFF006400);
+  final electionService = ElectionService();
+  String? _startError;
+  String? _endError;
+
+  createElection() async {
+      setState(() {
+        loading = true;
+      });
+      try {
+        print(_startDate);
+        Map<String, dynamic> data = {
+          'name': _titreController.text,
+          'start_date': _startDateController.text,
+          'end_date': _endDateController.text,
+        };
+        final response = await electionService.create(data);
+
+        if (response["success"]){
+          Election election = Election.fromJson(response["body"]);
+
+          Fluttertoast.showToast(msg: response["message"]);
+
+        }
+        // dispose();
+
+      } on DioException catch (e) {
+
+        if (e.response != null) {
+          print(e.response?.data["errors"]);
+          final errors = e.response?.data['errors'];
+          errors.forEach((key, value) {
+            print('$key: $value'); // Affiche chaque erreur
+          });
+          //
+          // print(formattedErrors);
+          // Map<String, String> errors = e.response?.data["errors"];
+
+          setState(() {
+            if (errors["start_date"]!=null){
+            _startError =errors["start_date"][0].toString();
+            }
+            if (errors["end_date"]!=null){
+              _endError = errors["end_date"][0].toString();
+            }
+          });
+
+          print(e.response?.statusCode);
+        } else {
+          // Something happened in setting up or sending the request that triggered an Error
+          print(e.requestOptions);
+          print(e.message);
+        }
+
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+      } finally {
+        setState(() {
+          loading = false;
+        });
+      }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +144,10 @@ class _CreateVotePageState extends State<CreateVotePage> {
           ),
           SizedBox(height: 8),
           TextFormField(
-            decoration: InputDecoration(labelText: "Titre"),
+            decoration: InputDecoration(
+                labelText: "Titre",
+            ),
+            controller: _titreController,
           ),
           SizedBox(height: 16),
           // Champ pour la date de début avec sélecteur de date
@@ -89,20 +160,23 @@ class _CreateVotePageState extends State<CreateVotePage> {
                 lastDate: DateTime(2100),
               );
               if (pickedDate != null) {
+                String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                 setState(() {
-                  _startDate = pickedDate;
+                  _startDateController.text = formattedDate; // Afficher la date formatée dans le champ
                 });
               }
             },
             child: InputDecorator(
               decoration: InputDecoration(
                 labelText: "Date de début",
+                errorText: _startError,
               ),
               child: Text(
-                _startDate != null
-                    ? "${_startDate!.day}/${_startDate!.month}/${_startDate!.year}"
+                _startDateController.text != ""
+                    ? _startDateController.text
                     : "Sélectionnez une date",
               ),
+
             ),
           ),
           SizedBox(height: 16),
@@ -116,18 +190,20 @@ class _CreateVotePageState extends State<CreateVotePage> {
                 lastDate: DateTime(2100),
               );
               if (pickedDate != null) {
+                String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                 setState(() {
-                  _endDate = pickedDate;
+                  _endDateController.text = formattedDate; // Afficher la date formatée dans le champ
                 });
               }
             },
             child: InputDecorator(
               decoration: InputDecoration(
                 labelText: "Date de fin",
+                errorText: _endError,
               ),
               child: Text(
-                _endDate != null
-                    ? "${_endDate!.day}/${_endDate!.month}/${_endDate!.year}"
+                _endDateController.text != ""
+                    ? _endDateController.text
                     : "Sélectionnez une date",
               ),
             ),
@@ -147,35 +223,43 @@ class _CreateVotePageState extends State<CreateVotePage> {
             backgroundColor: _darkGreen,
             minimumSize: Size(200, 50),
           ),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.check_circle, color: _darkGreen, size: 50),
-                      SizedBox(height: 16),
-                      Text(
-                          "Votre élection a bien été créée ! Optivote vous permet de la suivre."),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("OK"),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          child: Text(
+          onPressed: createElection,
+          //     () {
+          //   showDialog(
+          //     context: context,
+          //     builder: (context) {
+          //       return AlertDialog(
+          //         content: Column(
+          //           mainAxisSize: MainAxisSize.min,
+          //           children: [
+          //             Icon(Icons.check_circle, color: _darkGreen, size: 50),
+          //             SizedBox(height: 16),
+          //             Text(
+          //                 "Votre élection a bien été créée ! Optivote vous permet de la suivre."),
+          //           ],
+          //         ),
+          //         actions: [
+          //           TextButton(
+          //             onPressed: () {
+          //               Navigator.pop(context);
+          //             },
+          //             child: Text("OK"),
+          //           ),
+          //         ],
+          //       );
+          //     },
+          //   );
+          // },
+          child:!loading? Text(
             "Créer l'élection", // Changement du texte du bouton
             style: TextStyle(color: Colors.white),
+          ): SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
