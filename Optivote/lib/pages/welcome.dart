@@ -1,123 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:optivote/pages/addCandidat.dart';
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
   const Welcome({super.key});
+
+  @override
+  State<Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+
+    _controller.forward();
+
+    // Navigation automatique après 3 secondes
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        context.go('/connexion'); // ou la route de votre choix
+//         Navigator.push(
+//   context,
+//   MaterialPageRoute(builder: (context) => const AddCandidat()),
+// );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       color: Colors.white,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            height: screenHeight * 0.2,
+          FadeTransition(
+            opacity: _animation,
+            child: Image(
+              image: const AssetImage('assets/logo/Fichier 1@4x.png'),
+              width: screenWidth * 0.7,
+            ),
           ),
-          Image(
-            image: AssetImage('assets/logo/Fichier 1@4x.png'),
-            width: screenWidth * 0.7,
-          ),
-          SizedBox(
-            height: screenHeight * 0.1,
-          ),
-          Expanded(
-            child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromRGBO(8, 109, 42, 1),
-                      Color.fromRGBO(15, 211, 80, 1)
-                    ], // Les couleurs du dégradé
-                    begin: Alignment.topCenter, // Point de départ
-                    end: Alignment.bottomCenter, // Point de fin
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(67.0), // Arrondi en haut à gauche
-                    topRight: Radius.circular(67.0), // Arrondi en haut à droite
-                  ),
-                ),
-                padding: EdgeInsets.only(
-                    left: screenWidth * 0.075, right: screenWidth * 0.075),
-                child: Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: screenHeight * 0.07,
-                      ),
-                      Text(
-                        'Bienvenue!                   ',
-                        style: TextStyle(
-                            fontSize: screenWidth * 0.1, color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: screenHeight * 0.030,
-                      ),
-                      Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut',
-                        style: TextStyle(
-                            fontSize: screenWidth * 0.038, color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: screenHeight * 0.030,
-                      ),
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.all(
-                                    Color.fromRGBO(255, 255, 255, 1)),
-                                elevation: WidgetStateProperty.all(0),
-                                shape: WidgetStateProperty.all(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(32),
-                                  side: BorderSide(
-                                      color: Color(0xFF707070), width: 1),
-                                )),
-                                foregroundColor:
-                                    WidgetStateProperty.all(Colors.black)),
-                            onPressed: () {
-                              context.push("/connexion");
-                            },
-                            child: Text(
-                              "Se connecter",
-                              style: TextStyle(
-                                  fontSize: screenWidth * 0.038,
-                                  fontWeight: FontWeight.w100),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.all(
-                                    Color.fromRGBO(14, 128, 52, 0.81)),
-                                elevation: WidgetStateProperty.all(0),
-                                shape: WidgetStateProperty.all(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(32),
-                                  side: BorderSide(
-                                      color: Color(0xFF707070), width: 1),
-                                )),
-                                foregroundColor:
-                                    WidgetStateProperty.all(Colors.white)),
-                            onPressed: () {
-                              context.push("/inscription");
-                            },
-                            child: Text(
-                              "Créer un compte",
-                              style: TextStyle(
-                                  fontSize: screenWidth * 0.035,
-                                  fontWeight: FontWeight.w100),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
+          SizedBox(height: screenHeight * 0.05),
+          const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Color.fromRGBO(8, 109, 42, 1),
+            ),
           ),
         ],
       ),
