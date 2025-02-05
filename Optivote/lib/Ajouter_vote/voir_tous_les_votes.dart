@@ -121,13 +121,13 @@ class _SeeAllVotesState extends State<SeeAllVotes> {
             ),
 
           ),
-          Container(
+          SizedBox(
             height: screenHeight*0.6,
             child: Column(
               children: [
                 SizedBox(height: screenHeight*0.05,),
                 Text("${weekday[2][0]} ${weekday[2][1]} ${_getMonthName(currentMonth.month)} ${currentMonth.year}",style: TextStyle(fontSize: screenWidth*0.04,color:Colors.black,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
-                Container(
+                SizedBox(
                   height: screenHeight*0.5,
                   width: screenWidth*0.8,
                   child:SingleChildScrollView(
@@ -161,58 +161,7 @@ class _SeeAllVotesState extends State<SeeAllVotes> {
               ],
             ),
           ),
-          Expanded(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(8, 109, 42, 1),
-                        Color.fromRGBO(15, 211, 80, 1)
-                      ], // Les couleurs du dégradé
-                      begin: Alignment.topCenter, // Point de départ
-                      end: Alignment.bottomCenter, // Point de fin
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0), // Arrondi en haut à gauche
-                      topRight: Radius.circular(20.0), // Arrondi en haut à droite
-                    ),
-                  ),
-                  padding: EdgeInsets.only(
-                      left: screenWidth * 0.075, right: screenWidth * 0.075),
-                ),
-                Positioned(
-                  top: -screenHeight * 0.02,
-                  left: screenWidth * 0.42,
-                  child: Container(
-                    width: screenWidth * 0.15,
-                    height: screenHeight * 0.065,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                          offset: Offset(0, 5), // Décalage de l'ombre
-                        ),
-                      ], // Coins arrondis
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.home, size: 40, color: Colors.black),
-                      onPressed: () {
-                        // Action pour retourner à l'accueil
-                        context.push('/dashboard_vote');
-                      },
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+
         ]
       ),
     );

@@ -223,8 +223,6 @@ class _DetailAdminState extends State<DetailAdmin> {
           ],
         ),
       ),
-      // Bannière verte en bas
-      bottomNavigationBar: _buildHomeBanner(),
     );
   }
 
@@ -383,37 +381,6 @@ class _DetailAdminState extends State<DetailAdmin> {
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Widget pour la bannière en bas
-  Widget _buildHomeBanner() {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        color: _darkGreen,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Positioned(
-            top: 6,
-            child: Container(
-              padding: EdgeInsets.all(1.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: IconButton(
-                icon: Icon(Icons.home, size: 40, color: Colors.black),
-                onPressed: () {
-                  // Action pour retourner à l'accueil
-                },
-              ),
             ),
           ),
         ],
