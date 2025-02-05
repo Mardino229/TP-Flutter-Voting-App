@@ -69,9 +69,16 @@ class AuthentificateService {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> logout (int npi) async{
+  Future<Map<String, dynamic>> logout () async{
 
-    final response = await api.post('logout', data: npi);
+    final pref = await SharedPreferences.getInstance();
+    int? npi = pref.getInt("npi") ?? null;
+
+    // if (npi != "") {}
+
+    print(npi);
+
+    final response = await api.post('logout', data: {"npi": npi});
 
     if (response.statusCode == 422) {
       throw DioException(

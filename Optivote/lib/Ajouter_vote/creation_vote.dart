@@ -37,8 +37,9 @@ class _CreateVotePageState extends State<CreateVotePage> {
         final response = await electionService.create(data);
 
         if (response["success"]){
-          Election election = Election.fromJson(response["body"]);
-
+          // Election election = Election.fromJson(response["body"]);
+          // context.push("/detail_election/${election.id}");
+          context.push("/dashboard_vote");
           Fluttertoast.showToast(msg: response["message"]);
 
         }

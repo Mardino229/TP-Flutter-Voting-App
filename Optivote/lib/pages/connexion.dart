@@ -48,7 +48,10 @@ class _LoginState extends State<Login> {
           // Sauvegerder le token en mémoire
           sharedPref.setString("token", authUser.accessToken!);
           sharedPref.setInt("npi", authUser.npi!);
+          sharedPref.setString("role", authUser.role!);
           sharedPref.setInt("id", authUser.id!);
+          _emailController.text = "";
+          _passwordController.text = "";
           if (authUser.role=="user"){
             context.push("/home_user");
           }else{
@@ -381,8 +384,8 @@ class _LoginState extends State<Login> {
                                     fontSize: screenWidth * 0.045,
                                     fontWeight: FontWeight.w300),
                               ):  SizedBox(
-                              height: 20,
-                              width: 20,
+                              height: 15,
+                              width: 15,
                               child: CircularProgressIndicator(
                                 strokeWidth: 3,
                                 color: Colors.white,

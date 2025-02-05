@@ -1,6 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optivote/Ajouter_vote/details_election.dart';
+import 'package:optivote/data/models/election.dart';
+import 'package:optivote/data/services/authentificate_service.dart';
+import 'package:optivote/data/services/election_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardVote extends StatefulWidget {
   const DashboardVote({super.key});
@@ -13,10 +19,124 @@ class _DashboardVoteState extends State<DashboardVote>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
+  bool loading = false;
+  bool loading1 = false;
+  bool loading2 = false;
+  int? nbr_election ;
+  final authenticatedService = AuthentificateService();
+  final electionService = ElectionService();
+  List<Election> elections = [];
+
+  allElections () async {
+    setState(() {
+      loading1 = true;
+    });
+    try {
+      elections = await electionService.getAll();
+      setState(() {
+        loading1 = false;
+      });
+      print(elections);
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading1 = false;
+      });
+    }
+  }
+
+  dashboard () async {
+    setState(() {
+      loading2 = true;
+    });
+    try {
+      final response  = await electionService.dashboard();
+      if (response["success"]){
+        nbr_election = response["body"];
+        setState(() {
+          loading2 = false;
+        });
+
+      }
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading2 = false;
+      });
+    }
+  }
+
+
+
+  logout() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+
+      final response = await authenticatedService.logout();
+      print(response);
+      if (response["success"]){
+        Fluttertoast.showToast(msg: response["message"]);
+        final sharedPref = await SharedPreferences.getInstance();
+
+        sharedPref.setString("token", "");
+        sharedPref.setInt("id", 0);
+        sharedPref.setString("role", "");
+        context.push("/");
+      }else{
+        Fluttertoast.showToast(msg: response["message"]);
+      }
+
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    dashboard();
+    allElections();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -35,23 +155,23 @@ class _DashboardVoteState extends State<DashboardVote>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    List<String> nomElection = [
-      "Election municipale 2025",
-      "Election miss UAC 2025",
-      "Election responsable 2025",
-      "Election miss 2025",
-      "Election législative 2025",
-      "Election presidentielle 2026"
-    ];
-    List<String> periode = [
-      "22/01/2025-22/02/2025",
-      "22/01/2025-22/02/2025",
-      "22/01/2025-22/02/2025",
-      "22/01/2025-22/02/2025",
-      "22/01/2025-22/02/2025",
-      "30/03/2026-22/04/2026"
-    ];
-    int nbreVotes = 123;
+    // List<String> nomElection = [
+    //   "Election municipale 2025",
+    //   "Election miss UAC 2025",
+    //   "Election responsable 2025",
+    //   "Election miss 2025",
+    //   "Election législative 2025",
+    //   "Election presidentielle 2026"
+    // ];
+    // List<String> periode = [
+    //   "22/01/2025-22/02/2025",
+    //   "22/01/2025-22/02/2025",
+    //   "22/01/2025-22/02/2025",
+    //   "22/01/2025-22/02/2025",
+    //   "22/01/2025-22/02/2025",
+    //   "30/03/2026-22/04/2026"
+    // ];
+
     int nbreVotants = 1234;
 
     return Scaffold(
@@ -186,8 +306,15 @@ class _DashboardVoteState extends State<DashboardVote>
                                   'assets/streamline_politics-vote-2-solid.png'),
                               height: 70,
                             ),
+                            loading2?
+                            SizedBox(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: Colors.green,
+                              ),
+                            ):
                             Text(
-                              "$nbreVotes\nVotes",
+                              "$nbr_election\nVotes",
                               style: TextStyle(fontSize: screenWidth * 0.02),
                             ),
                             SizedBox(
@@ -352,10 +479,11 @@ class _DashboardVoteState extends State<DashboardVote>
                     ),
                   ],
                 ),
-                child: ListView.builder(
+                child:!loading1?
+                ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: nomElection.length,
+                  itemCount: elections.length,
                   itemBuilder: (context, index) {
                     return Card(
                       margin: EdgeInsets.symmetric(
@@ -368,11 +496,7 @@ class _DashboardVoteState extends State<DashboardVote>
                       ),
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ElectionDetailsScreen()),
-                          );
+                          context.push("/detail_election/${elections[index].id}");
                         },
                         borderRadius: BorderRadius.circular(15),
                         child: Padding(
@@ -394,7 +518,7 @@ class _DashboardVoteState extends State<DashboardVote>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      nomElection[index],
+                                      "${elections[index].name}",
                                       style: TextStyle(
                                         fontSize: screenWidth * 0.04,
                                         fontWeight: FontWeight.bold,
@@ -402,7 +526,7 @@ class _DashboardVoteState extends State<DashboardVote>
                                     ),
                                     SizedBox(height: screenHeight * 0.005),
                                     Text(
-                                      periode[index],
+                                      "${elections[index].startDate}-${elections[index].endDate}",
                                       style: TextStyle(
                                         fontSize: screenWidth * 0.035,
                                         color: Colors.grey[600],
@@ -417,6 +541,12 @@ class _DashboardVoteState extends State<DashboardVote>
                       ),
                     );
                   },
+                ):
+                SizedBox(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: Colors.green.shade600,
+                  ),
                 ),
               ),
             ],
@@ -468,7 +598,9 @@ class _DashboardVoteState extends State<DashboardVote>
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => {
+                Navigator.of(context).pop()
+              },
               child: Text(
                 "Annuler",
                 style: TextStyle(
@@ -478,20 +610,26 @@ class _DashboardVoteState extends State<DashboardVote>
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                context.go('/');
-              },
+              onPressed: logout,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text(
+              child:!loading?
+              Text(
                 "Déconnexion",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
+                ),
+              ):  SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: Colors.white,
                 ),
               ),
             ),

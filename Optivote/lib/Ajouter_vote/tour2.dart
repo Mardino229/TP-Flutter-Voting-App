@@ -1,14 +1,25 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:optivote/data/services/election_service.dart';
 
-class DeuxiemeTourScreen extends StatefulWidget {
+import '../data/models/election.dart';
+
+class SecondTourScreen extends StatefulWidget {
+  final String id;
+
+  SecondTourScreen({required this.id});
   @override
-  _DeuxiemeTourScreenState createState() => _DeuxiemeTourScreenState();
+  _SecondTourScreenState createState() => _SecondTourScreenState();
 }
 
-class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
+class _SecondTourScreenState extends State<SecondTourScreen> {
   DateTime? startDate;
   DateTime? endDate;
+  bool loading = false;
+  final ElectionService electionService = ElectionService();
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
@@ -44,11 +55,10 @@ class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
       });
     }
   }
-
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      print('Date de début: ${DateFormat('dd/MM/yyyy').format(startDate!)}');
-      print('Date de fin: ${DateFormat('dd/MM/yyyy').format(endDate!)}');
+      print('Date de début: ${DateFormat('yyyy/MM/dd').format(startDate!)}');
+      print('Date de fin: ${DateFormat('yyyy/MM/dd').format(endDate!)}');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -66,6 +76,93 @@ class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
     }
   }
 
+  createElectionSecondTour() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        loading = true;
+      });
+      try {
+        print(startDate);
+        Map<String, dynamic> data = {
+          'start_date': DateFormat('yyyy/MM/dd').format(startDate!),
+          'end_date': DateFormat('yyyy/MM/dd').format(endDate!),
+        };
+        final response = await electionService.secondTour(widget.id, data);
+
+        if (response["success"]){
+          // Election election = Election.fromJson(response["body"]);
+          // context.push("/detail_election/${election.id}");
+
+          Fluttertoast.showToast(msg: response["message"]);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '${response["message"]}',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+          context.push("/dashboard_vote");
+        } else{
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '${response["message"]}',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+        // dispose();
+
+      } on DioException catch (e) {
+
+        if (e.response != null) {
+          print(e.response?.data["errors"]);
+          final errors = e.response?.data['errors'];
+          errors.forEach((key, value) {
+            print('$key: $value'); // Affiche chaque erreur
+          });
+          //
+          // print(formattedErrors);
+          // Map<String, String> errors = e.response?.data["errors"];
+
+          // setState(() {
+          //   if (errors["start_date"]!=null){
+          //     _startError =errors["start_date"][0].toString();
+          //   }
+          //   if (errors["end_date"]!=null){
+          //     _endError = errors["end_date"][0].toString();
+          //   }
+          // });
+
+          print(e.response?.statusCode);
+        } else {
+          // Something happened in setting up or sending the request that triggered an Error
+          print(e.requestOptions);
+          print(e.message);
+        }
+
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+      } finally {
+        setState(() {
+          loading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +173,7 @@ class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20,
+            color: Colors.white
           ),
         ),
         backgroundColor: Color.fromRGBO(14, 128, 52, 1),
@@ -144,7 +242,7 @@ class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
                               ),
                               controller: TextEditingController(
                                 text: startDate != null
-                                    ? DateFormat('dd/MM/yyyy')
+                                    ? DateFormat('yyyy/MM/dd')
                                         .format(startDate!)
                                     : '',
                               ),
@@ -198,7 +296,7 @@ class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
                               ),
                               controller: TextEditingController(
                                 text: endDate != null
-                                    ? DateFormat('dd/MM/yyyy').format(endDate!)
+                                    ? DateFormat('yyyy/MM/dd').format(endDate!)
                                     : '',
                               ),
                               validator: (value) {
@@ -223,15 +321,7 @@ class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _submitForm,
-                    child: Text(
-                      'Créer',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
+                    onPressed: createElectionSecondTour,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(14, 128, 52, 1),
                       padding: EdgeInsets.symmetric(vertical: 16),
@@ -240,6 +330,21 @@ class _DeuxiemeTourScreenState extends State<DeuxiemeTourScreen> {
                       ),
                       elevation: 0,
                     ),
+                    child:!loading? Text('Créer',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                        color: Colors.white
+                      ),
+                    ): SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      color: Colors.white,
+                    ),
+                  ),
                   ),
                 ),
               ],

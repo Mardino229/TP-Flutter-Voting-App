@@ -311,7 +311,8 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                       width: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 3,
-                        color: Colors.white,),
+                        color: Colors.white,
+                      ),
                     )
                   ),
                 ),

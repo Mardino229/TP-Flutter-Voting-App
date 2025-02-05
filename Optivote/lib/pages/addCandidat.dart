@@ -447,11 +447,17 @@
 // }
 
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:optivote/data/services/candidat_service.dart';
 
 class AddCandidat extends StatefulWidget {
-  const AddCandidat({super.key});
+  final String id;
+
+  const AddCandidat({super.key, required, required this.id});
 
   @override
   State<AddCandidat> createState() => _AddCandidatState();
@@ -461,6 +467,8 @@ class _AddCandidatState extends State<AddCandidat> {
   final _formKey = GlobalKey<FormState>();
   List<CandidatFields> candidatFields = [CandidatFields()];
   final ImagePicker _picker = ImagePicker();
+  final candidatService = CandidatService();
+  bool loading = false;
   bool _isSubmitting = false;
 
   void addNewFields() {
@@ -523,13 +531,13 @@ class _AddCandidatState extends State<AddCandidat> {
     });
 
     if (validateFields()) {
-      // TODO: Implémenter la logique de sauvegarde
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Formulaire valide - Données prêtes à être envoyées'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      addCandidat();
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Formulaire valide - Données prêtes à être envoyées'),
+      //     backgroundColor: Colors.green,
+      //   ),
+      // );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -538,10 +546,101 @@ class _AddCandidatState extends State<AddCandidat> {
         ),
       );
     }
-
     setState(() {
       _isSubmitting = false;
     });
+  }
+
+  addCandidat () async {
+    setState(() {
+      _isSubmitting = true;
+    });
+    if (validateFields()) {
+      try {
+        for (int i=0; i<candidatFields.length; i++){
+          Map<String, dynamic> data = {
+            'npi': candidatFields[i].npiController.text,
+            'description': candidatFields[i].descriptionController.text,
+            'election_id': widget.id,
+          };
+          print(candidatFields[i].npiController.text);
+          print(candidatFields[i].descriptionController.text);
+          final response = await candidatService.add(data,candidatFields[i].imageFile);
+          print(response);
+          if (response["success"]){
+            context.push("/detail_election/${widget.id}");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${response["message"]}',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+          } else {
+            context.push("/detail_election/${widget.id}");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${response["message"]}',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+          }
+        }
+        // dispose();
+
+      } on DioException catch (e) {
+
+        if (e.response != null) {
+          print(e.response?.data["errors"]);
+          final errors = e.response?.data['errors'];
+          errors.forEach((key, value) {
+            print('$key: $value'); // Affiche chaque erreur
+          });
+          //
+          // print(formattedErrors);
+          // Map<String, String> errors = e.response?.data["errors"];
+
+          // setState(() {
+          //   // if (errors["start_date"]!=null){
+          //   //   _startError =errors["start_date"][0].toString();
+          //   // }
+          //   // if (errors["end_date"]!=null){
+          //   //   _endError = errors["end_date"][0].toString();
+          //   // }
+          // });
+          print(e.response?.statusCode);
+        } else {
+          // Something happened in setting up or sending the request that triggered an Error
+          print(e.requestOptions);
+          print(e.message);
+        }
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
+      } finally {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez corriger les erreurs dans le formulaire'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -557,9 +656,9 @@ class _AddCandidatState extends State<AddCandidat> {
     if (value == null || value.isEmpty) {
       return 'Le NPI est requis';
     }
-    if (!RegExp(r'^\d{10}$').hasMatch(value)) {
-      return 'Le NPI doit contenir exactement 10 chiffres';
-    }
+    // if (!RegExp(r'^\d{9}$').hasMatch(value)) {
+    //   return 'Le NPI doit contenir exactement 10 chiffres';
+    // }
     return null;
   }
 
@@ -589,7 +688,7 @@ class _AddCandidatState extends State<AddCandidat> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.person_add, color: Colors.blue),
+            icon: const Icon(Icons.person_add, color: Colors.green),
             onPressed: addNewFields,
             tooltip: 'Ajouter un autre candidat',
           ),
@@ -617,7 +716,7 @@ class _AddCandidatState extends State<AddCandidat> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
+                            color: Colors.green,
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15),
@@ -631,14 +730,14 @@ class _AddCandidatState extends State<AddCandidat> {
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color: Colors.white,
                                 ),
                               ),
                               if (candidatFields.length > 1)
                                 IconButton(
                                   onPressed: () => removeFields(index),
-                                  icon: const Icon(Icons.delete_outline),
-                                  color: Colors.red,
+                                  icon: const Icon(Icons.delete),
+                                  color: Colors.red.shade100,
                                   tooltip: 'Supprimer ce candidat',
                                 ),
                             ],
@@ -722,6 +821,7 @@ class _AddCandidatState extends State<AddCandidat> {
                                 ),
                                 keyboardType: TextInputType.number,
                                 validator: validateNPI,
+                                maxLength: 10,
                               ),
                               const SizedBox(height: 16),
                               TextFormField(
@@ -752,7 +852,7 @@ class _AddCandidatState extends State<AddCandidat> {
               Container(
                 padding: const EdgeInsets.all(16),
                 child: ElevatedButton.icon(
-                  onPressed: _isSubmitting ? null : submitForm,
+                  onPressed: addCandidat,
                   icon: _isSubmitting
                       ? const SizedBox(
                           width: 20,
@@ -762,12 +862,17 @@ class _AddCandidatState extends State<AddCandidat> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Icon(Icons.save),
-                  label: Text(
+                      : const Icon(
+                          Icons.save,
+                          color: Colors.white,
+                          size: 20,
+                  ),
+                  label:
+                  Text(
                     _isSubmitting
-                        ? 'Enregistrement...'
-                        : 'Enregistrer tous les candidats',
-                    style: const TextStyle(fontSize: 16),
+                        ? 'Enregistrement... ' :
+                    'Enregistrer tous les candidats',
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

@@ -3,7 +3,7 @@ class Election {
   String? name;
   String? startDate;
   String? endDate;
-  bool? status;
+  int? status;
 
   Election({this.id, this.name, this.startDate, this.endDate, this.status});
 

@@ -9,10 +9,18 @@ class CandidatService {
 
   Dio api = configureDio();
 
-  Future<Map<String, dynamic>> add ({
-    required Map<String, dynamic> data,
+  Future<Map<String, dynamic>> add (
+     Map<String, dynamic> data,
     File? imageFile,
-  }) async {
+  ) async {
+
+      final pref = await SharedPreferences.getInstance();
+      String token = pref.getString("token") ?? "";
+
+      if (token != "") {
+        api.options.headers['AUTHORIZATION'] = 'Bearer $token';
+      }
+
       final formData = FormData.fromMap({
         ...data,
         if (imageFile != null)
@@ -49,7 +57,7 @@ class CandidatService {
     return response.data;
   }
 
-  Future<List<Candidat>> getAll (int election_id) async{
+  Future<List<Candidat>> getAll (String election_id) async{
 
     final pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
@@ -60,7 +68,7 @@ class CandidatService {
 
     final response = await api.get('candidats/$election_id');
 
-    return (response.data.body as List).map((e) => Candidat.fromJson(e)).toList();
+    return (response.data["body"] as List).map((e) => Candidat.fromJson(e)).toList();
   }
 
   Future<Map<String, dynamic>> get (int id) async{

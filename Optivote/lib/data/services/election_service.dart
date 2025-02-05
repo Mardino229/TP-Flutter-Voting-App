@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:optivote/data/models/election.dart';
+import 'package:optivote/data/models/electionDetail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../dio_instance.dart';
 
@@ -51,7 +52,7 @@ class ElectionService {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> delete(int id) async {
+  Future<Map<String, dynamic>> delete(String id) async {
     final pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
     if (token != "") {
@@ -61,7 +62,7 @@ class ElectionService {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> get (int id) async{
+  Future<Election> get (String id) async{
 
     final pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
@@ -72,7 +73,21 @@ class ElectionService {
 
     final response = await api.get('elections/$id');
 
-    return response.data;
+    return Election.fromJson(response.data["body"]);
+  }
+
+  Future<ElectionDetails> getDetails (String id) async{
+
+    final pref = await SharedPreferences.getInstance();
+    String token = pref.getString("token") ?? "";
+
+    if (token != "") {
+      api.options.headers['AUTHORIZATION'] = 'Bearer $token';
+    }
+
+    final response = await api.get('election/detail/$id');
+
+    return ElectionDetails.fromJson(response.data["body"]);
   }
 
   Future<List<Election>> getAll () async{
@@ -85,8 +100,24 @@ class ElectionService {
     }
 
     final response = await api.get('elections');
+    print(response);
 
-    return (response.data.body as List).map((e) => Election.fromJson(e)).toList();
+    return (response.data["body"] as List).map((e) => Election.fromJson(e)).toList();
+  }
+
+  Future<Map<String, dynamic>> dashboard () async{
+
+    final pref = await SharedPreferences.getInstance();
+    String token = pref.getString("token") ?? "";
+
+    if (token != "") {
+      api.options.headers['AUTHORIZATION'] = 'Bearer $token';
+    }
+
+    final response = await api.get('dashboard');
+    print(response);
+
+    return response.data;
   }
 
   Future<List<Election>> getAllInProgress () async{
@@ -131,7 +162,7 @@ class ElectionService {
     return (response.data.body as List).map((e) => Election.fromJson(e)).toList();
   }
 
-  Future<Map<String, dynamic>> SecondTour (int id, Map<String, dynamic> data) async{
+  Future<Map<String, dynamic>> secondTour (String id, Map<String, dynamic> data) async{
 
     final pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
