@@ -57,7 +57,7 @@ GoRouter route(token, role) {
         // builder: (context, state) => NewPasswordPage(),
         builder: (context, state) {
           final String id = state.pathParameters['id']!;
-          return DetailUser(id: id);
+          return DetailUser();
         },
       ),
       //lien vers la page de création de vote
@@ -84,7 +84,7 @@ GoRouter route(token, role) {
         path: '/detail_vote/:id',
         builder: (context, state) {
           final String id = state.pathParameters['id']!;
-          return DetailUser(id: id);
+          return DetailUser();
         },
       ),
       GoRoute(

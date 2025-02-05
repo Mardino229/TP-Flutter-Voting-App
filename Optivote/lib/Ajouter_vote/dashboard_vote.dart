@@ -90,8 +90,6 @@ class _DashboardVoteState extends State<DashboardVote>
     }
   }
 
-
-
   logout() async {
     setState(() {
       loading = true;
