@@ -2,9 +2,7 @@
 import 'package:flutter/material.dart';
 
 class DetailUser extends StatefulWidget {
-  final String id;
 
-  DetailUser({required this.id});
   @override
   _DetailUserState createState() => _DetailUserState();
 }
@@ -20,7 +18,7 @@ class _DetailUserState extends State<DetailUser> {
   Widget build(BuildContext context) {
     // Récupérer les arguments passés lors de la navigation
     final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
       appBar: AppBar(
@@ -353,7 +351,7 @@ class _DetailUserState extends State<DetailUser> {
                               value: progress,
                               backgroundColor: Colors.grey[300],
                               valueColor:
-                                  AlwaysStoppedAnimation<Color>(_darkGreen),
+                              AlwaysStoppedAnimation<Color>(_darkGreen),
                             ),
                           ),
                         ],
