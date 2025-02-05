@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 class DetailUser extends StatefulWidget {
+
   @override
   _DetailUserState createState() => _DetailUserState();
 }

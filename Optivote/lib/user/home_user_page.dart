@@ -4,6 +4,7 @@ class HomeUserPage extends StatelessWidget {
   // Couleur personnalisée pour la bannière
   final Color _darkGreen =
       Color.fromARGB(255, 23, 98, 28); // Exemple de couleur verte foncée
+  List<Candidat> candidats =[Candidat(nom: "DASSI Maxime", age: 40, parti: "BR"),Candidat(nom: "EGBOGBE Wisdom", age: 42, parti: "UP"),Candidat(nom: "AGUESSY Marie-Adelphe", age: 44, parti: "FCBE")];
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class HomeUserPage extends StatelessWidget {
                               CrossAxisAlignment.center, // Centrer le texte
                           children: [
                             Text(
-                              "Élection $index",
+                              "${candidats[index].nom}",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -73,7 +74,7 @@ class HomeUserPage extends StatelessWidget {
                                 height:
                                     8), // Espacement entre le titre et la description
                             Text(
-                              "Description de l'élection $index",
+                              "${candidats[index].age} ans",
                               style: TextStyle(color: Colors.white),
                               textAlign: TextAlign.center, // Centrer le texte
                             ),
@@ -82,17 +83,11 @@ class HomeUserPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment
                                   .center, // Centrer les icônes
                               children: [
-                                Icon(Icons.thumb_up,
-                                    color: Colors.white, size: 16),
                                 SizedBox(width: 4),
                                 Text(
-                                  "${100 + index} votes",
+                                  "${candidats[index].parti}",
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                SizedBox(
-                                    width: 16), // Espacement entre les icônes
-                                Icon(Icons.timer,
-                                    color: Colors.white, size: 16),
                               ],
                             ),
                           ],
@@ -103,39 +98,23 @@ class HomeUserPage extends StatelessWidget {
                 },
               ),
             ),
-            // Boutons Créer vote et Filtrer
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text("Créer vote"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text("Filtrer"),
-                  ),
-                ],
-              ),
-            ),
             // Titre Nouveaux scrutins
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Nouveaux scrutins",
+                  "Elections",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
+            SizedBox(height: 50,),
             // Liste des nouveaux scrutins
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 5, // Nombre de scrutins
+              itemCount: 1, // Nombre de scrutins
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
@@ -144,7 +123,7 @@ class HomeUserPage extends StatelessWidget {
                       context,
                       '/detail_vote',
                       arguments: {
-                        'title': "Élection Municipale 2025",
+                        'title': "Élection Presidentielle 2026",
                         'description': "Description de l'élection $index",
                         'votes': 50 + index,
                         'deadline': "2025-05-20",
@@ -177,7 +156,7 @@ class HomeUserPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Élection Municipale 2025",
+                                  "Élection Présidentielle 2026",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -208,40 +187,13 @@ class HomeUserPage extends StatelessWidget {
           ],
         ),
       ),
-      // Bannière en bas avec le widget personnalisé
-      bottomNavigationBar: _buildHomeBanner(),
     );
   }
+}
+class Candidat {
+  final String nom;
+  final int age;
+  final String parti;
 
-  // Widget pour la bannière en bas
-  Widget _buildHomeBanner() {
-    return Container(
-      height: 60, // Hauteur réduite de la bannière
-      decoration: BoxDecoration(
-        color: _darkGreen,
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(20)), // Bords arrondis
-      ),
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Positioned(
-            top: 6,
-            child: Container(
-              padding: EdgeInsets.all(1.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: IconButton(
-                icon: Icon(Icons.home, size: 40, color: Colors.black),
-                onPressed: () {
-                  // Action pour retourner à l'accueil
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Candidat({required this.nom,required this.age,required this.parti});
 }

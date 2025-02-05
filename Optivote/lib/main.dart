@@ -67,7 +67,7 @@ final _router = GoRouter(
       builder: (context, state) => HomeUserPage(),
     ),
     GoRoute(
-      path: '/detail_vote',
+      path: '/detail_user',
       builder: (context, state) => DetailUser(),
     ),
     GoRoute(
