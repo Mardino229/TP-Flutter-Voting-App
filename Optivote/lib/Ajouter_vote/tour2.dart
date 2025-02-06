@@ -332,7 +332,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
                     ),
                     child:!loading? Text('Créer',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 20,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
                         color: Colors.white

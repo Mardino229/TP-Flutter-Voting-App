@@ -1,6 +1,17 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optivote/Ajouter_vote/details_election.dart';
+import 'package:optivote/data/models/election.dart';
+import 'package:optivote/data/services/authentificate_service.dart';
+import 'package:optivote/data/services/election_service.dart';
+import 'package:optivote/data/services/resultat_service.dart';
+import 'package:optivote/data/services/vote_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../data/models/candidat.dart';
+import '../data/models/resultat.dart';
 
 class Candidate {
   final String name;
@@ -26,7 +37,10 @@ class _HomeUserPageState extends State<HomeUserPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
-
+  final AuthentificateService authentificateService = AuthentificateService();
+  final ElectionService electionService = ElectionService();
+  final VoteService voteService = VoteService();
+  final ResultatService resultatService = ResultatService();
   // Candidate selection variables
   List<Candidate> candidates = [
     Candidate(
@@ -46,13 +60,181 @@ class _HomeUserPageState extends State<HomeUserPage>
         photoPath: "assets/candidat4.png",
         party: "Parti Conservateur")
   ];
-  Candidate? _selectedCandidate;
+  late List<Resultat> resultatElection = [];
+  Candidat? _selectedCandidate;
+  Election election = new Election();
   bool _hasVoted = false;
+  bool loading = false;
+  bool loading1 = false;
+  bool loading2 = false;
+  bool loading3 = false;
   int _totalVotes = 0;
+
+  electionInProgress () async {
+    setState(() {
+      loading1 = true;
+      loading3 = true;
+    });
+    try {
+      List<Election> elections = [];
+      elections = await electionService.getAllInProgress();
+      election = elections[0];
+      setState(() {
+        loading1 = false;
+      });
+      hasVoted();
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading1 = false;
+      });
+    }
+  }
+  retrieveResultat () async {
+    try {
+      resultatElection = await resultatService.getAll(election.id.toString());
+      setState(() {});
+      setState(() {
+        loading3 = false;
+      });
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading3 = false;
+      });
+    }
+  }
+  hasVoted () async {
+    try {
+      final response = await voteService.verifyVote(election.id.toString());
+      print(response["success"]);
+      setState(() {
+        _hasVoted = !response["success"];
+      });
+      Fluttertoast.showToast(msg: response["message"]);
+      retrieveResultat();
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      // setState(() {
+      //   loading3 = false;
+      // });
+    }
+  }
+  vote(id) async {
+    setState(() {
+      loading2 = true;
+    });
+    try {
+      final pref = await SharedPreferences.getInstance();
+      int? userId = pref.getInt("id") ?? null;
+      Map<String, dynamic> data = {
+        "election_id": election.id,
+        "candidat_id": id,
+        "user_id": userId
+      };
+      final response = await voteService.vote(data);
+
+      Fluttertoast.showToast(msg: response["message"]);
+      retrieveResultat();
+      hasVoted();
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading2 = false;
+      });
+    }
+  }
+  logout() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+
+      final response = await authentificateService.logout();
+      print(response);
+      if (response["success"]){
+        Fluttertoast.showToast(msg: response["message"]);
+        final sharedPref = await SharedPreferences.getInstance();
+        sharedPref.setString("token", "");
+        sharedPref.setInt("id", 0);
+        sharedPref.setString("role", "");
+        context.push("/");
+      }else{
+        Fluttertoast.showToast(msg: response["message"]);
+      }
+
+    } on DioException catch (e) {
+
+      if (e.response != null) {
+        print(e.response);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    // electionInProgress();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -70,11 +252,10 @@ class _HomeUserPageState extends State<HomeUserPage>
   void _submitVote() {
     if (_selectedCandidate != null) {
       setState(() {
-        _selectedCandidate!.votes++;
+        // _selectedCandidate!.votes++;
         _totalVotes++;
         _hasVoted = true;
       });
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Vote soumis pour ${_selectedCandidate!.name}'),
@@ -120,8 +301,22 @@ class _HomeUserPageState extends State<HomeUserPage>
               ),
             ],
           ),
-          child: Text(
-            "Election Présidentielle 2025",
+          child: loading1 ?
+          SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: Colors.green,
+            ),
+          ):election.name!=null?
+          Text(
+            "${election.name}",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: screenWidth * 0.05,
+              fontWeight: FontWeight.bold,
+            ),
+          ): Text(
+              "Aucune élection en cours",
             style: TextStyle(
               color: Colors.black,
               fontSize: screenWidth * 0.05,
@@ -184,8 +379,22 @@ class _HomeUserPageState extends State<HomeUserPage>
                           padding: EdgeInsets.only(
                               left: screenWidth * 0.04,
                               top: screenHeight * 0.04),
-                          child: Text(
-                            "Election 2025\nChoisissez votre candidat",
+                          child:loading1 ?
+                          SizedBox(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: Colors.green,
+                            ),
+                          ):election.name!=null?
+                          Text(
+                            "${election.name}\nChoisissez votre candidat",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: screenWidth * 0.05,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ): Text(
+                              "Aucune élection en cours",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: screenWidth * 0.05,
@@ -233,7 +442,7 @@ class _HomeUserPageState extends State<HomeUserPage>
                         ),
                       ),
                     ),
-                  ],
+                  ]
                 ),
               ),
               SizedBox(height: screenHeight * 0.04),
@@ -256,7 +465,14 @@ class _HomeUserPageState extends State<HomeUserPage>
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: loading3? [
+                      SizedBox(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ] : resultatElection.isNotEmpty?[
                       Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Text(
@@ -268,113 +484,118 @@ class _HomeUserPageState extends State<HomeUserPage>
                           ),
                         ),
                       ),
-                      ...candidates
-                          .map((candidate) => Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: _selectedCandidate == candidate
-                                          ? Color.fromRGBO(14, 128, 52, 1)
-                                          : Colors.grey[300]!,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: _selectedCandidate == candidate
-                                      ? Color.fromRGBO(14, 128, 52, 0.1)
-                                      : Colors.white,
+                      ...resultatElection
+                          .map((resultat) => Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: _selectedCandidate == resultat.candidat
+                                  ? Color.fromRGBO(14, 128, 52, 1)
+                                  : Colors.grey[300]!,
+                              width: 2),
+                          borderRadius: BorderRadius.circular(15),
+                          color: _selectedCandidate == resultat.candidat
+                              ? Color.fromRGBO(14, 128, 52, 0.1)
+                              : Colors.white,
+                        ),
+                        child: ListTile(
+                          onTap: !_hasVoted
+                              ? () {
+                            setState(() {
+                              _selectedCandidate = resultat.candidat;
+                            });
+                          }
+                              : null,
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundImage:
+                            NetworkImage('${resultat.candidat?.photo}'),
+                          ),
+                          title: Text(
+                            "${resultat.candidat?.name}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          subtitle: _hasVoted
+                              ? Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${resultat.candidat?.description}",
+                                style: TextStyle(
+                                  color: Colors.grey[600],
                                 ),
-                                child: ListTile(
-                                  onTap: !_hasVoted
-                                      ? () {
-                                          setState(() {
-                                            _selectedCandidate = candidate;
-                                          });
-                                        }
-                                      : null,
-                                  leading: CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage:
-                                        AssetImage(candidate.photoPath),
-                                  ),
-                                  title: Text(
-                                    candidate.name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  subtitle: _hasVoted
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              candidate.party,
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            LinearProgressIndicator(
-                                              value: _calculateVotePercentage(
-                                                      candidate) /
-                                                  100,
-                                              backgroundColor: Colors.grey[300],
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      Color.fromRGBO(
-                                                          14, 128, 52, 1)),
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              '${_calculateVotePercentage(candidate).toStringAsFixed(1)}%',
-                                              style: TextStyle(
-                                                  color: Colors.grey[700],
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ],
-                                        )
-                                      : Text(
-                                          candidate.party,
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                  trailing: !_hasVoted
-                                      ? Radio<Candidate>(
-                                          value: candidate,
-                                          groupValue: _selectedCandidate,
-                                          activeColor:
-                                              Color.fromRGBO(14, 128, 52, 1),
-                                          onChanged: (Candidate? value) {
-                                            setState(() {
-                                              _selectedCandidate = value;
-                                            });
-                                          },
-                                        )
-                                      : null,
-                                ),
-                              ))
-                          .toList(),
+                              ),
+                              SizedBox(height: 8),
+                              LinearProgressIndicator(
+                                value: resultat.percentage ?? 0,
+                                backgroundColor: Colors.grey[300],
+                                valueColor:
+                                AlwaysStoppedAnimation<Color>(
+                                    Color.fromRGBO(
+                                        14, 128, 52, 1)),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                '${resultat.percentage ?? 0}%',
+                                style: TextStyle(
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          )
+                              : Text(
+                            "${resultat.candidat?.description}",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          trailing: !_hasVoted
+                              ? Radio<Candidat?>(
+                            value: resultat.candidat,
+                            groupValue: _selectedCandidate,
+                            activeColor:
+                            Color.fromRGBO(14, 128, 52, 1),
+                            onChanged: (Candidat? value) {
+                              setState(() {
+                                _selectedCandidate = value;
+                              });
+                            },
+                          )
+                              : null,
+                        ),
+                      )),
                       if (!_hasVoted)
                         Center(
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 16.0, horizontal: 16),
                             child: ElevatedButton.icon(
-                              onPressed: _submitVote,
+                              onPressed: ()=>{
+                                vote(_selectedCandidate?.id)
+                              },
                               icon:
-                                  Icon(Icons.how_to_vote, color: Colors.white),
-                              label: Text(
+                              Icon(Icons.how_to_vote, color: Colors.white),
+                              label: !loading2?
+                              Text(
                                 "Valider mon vote",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: screenWidth * 0.04,
                                 ),
+                              ): SizedBox(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  color: Colors.green,
+                                ),
                               ),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                      Color.fromRGBO(14, 128, 52, 1),
+                                  Color.fromRGBO(14, 128, 52, 1),
                                   padding: EdgeInsets.symmetric(
                                       horizontal: screenWidth * 0.2,
                                       vertical: 15),
@@ -383,6 +604,10 @@ class _HomeUserPageState extends State<HomeUserPage>
                             ),
                           ),
                         ),
+                    ] : [
+                      SizedBox(
+                        child: Text("Aucun candidat"),
+                      )
                     ],
                   ),
                 ),
@@ -432,9 +657,7 @@ class _HomeUserPageState extends State<HomeUserPage>
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                context.go('/');
-              },
+              onPressed: logout,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(

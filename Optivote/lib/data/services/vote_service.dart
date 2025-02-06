@@ -28,16 +28,17 @@ class VoteService {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> verifyVote (int election_id, int user_id, Map<String, dynamic> data) async{
+  Future<Map<String, dynamic>> verifyVote (String election_id) async{
 
     final pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
+    int? user_id = pref.getInt("id") ?? null;
 
     if (token != "") {
       api.options.headers['AUTHORIZATION'] = 'Bearer $token';
     }
 
-    final response = await api.get('vote/$election_id/$user_id');
+    final response = await api.get('vote/$election_id/${user_id.toString()}');
 
     return response.data;
   }

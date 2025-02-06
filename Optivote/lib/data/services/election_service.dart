@@ -131,7 +131,7 @@ class ElectionService {
 
     final response = await api.get('election_inprogress');
 
-    return (response.data.body as List).map((e) => Election.fromJson(e)).toList();
+    return (response.data["body"] as List).map((e) => Election.fromJson(e)).toList();
   }
 
   Future<List<Election>> getAllCompleted () async{

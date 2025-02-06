@@ -16,7 +16,7 @@ class Resultat {
     electionId = json['election_id'];
     candidatId = json['candidat_id'];
     nbr_vote = json['nbr_vote'];
-    percentage = json['percentage'];
+    percentage = (json['percentage'] as num).toDouble();
     candidat = json['candidat'] != null
         ? new Candidat.fromJson(json['candidat'])
         : null;
