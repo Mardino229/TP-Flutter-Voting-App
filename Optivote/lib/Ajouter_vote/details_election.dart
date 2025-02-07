@@ -250,15 +250,11 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
             width: screenWidth * 1,
             height: screenHeight * 0.25,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.green.shade700, Colors.green.shade600],
-              ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
+                image: DecorationImage(
+                    image: AssetImage("assets/image 1.png",),
+                    opacity: 0.89,
+                    fit: BoxFit.cover),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40),bottomRight: Radius.circular(40),)
             ),
             child: SafeArea(
               bottom: false,
@@ -334,45 +330,50 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                   Center(
                     child: Text("Aucune option en tête"),
                   ),
+
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _isVotingClosed ? null : ()=>_showDeleteDialog(context),
-                      icon: const Icon(
+                  Row(children:[
+                    SizedBox(
+                      width: screenWidth*0.35,
+                      child: ElevatedButton.icon(
+                        onPressed: _isVotingClosed ? null : ()=>_showDeleteDialog(context),
+                        icon: const Icon(
                           Icons.close,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      label: Text(_isVotingClosed
-                          ? 'Vote clôturé'
-                          : "Supprimer l'élection"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        context.push("/second_tour/${widget.id}");
-                      },
-                      label: Text(
-                        'Deuxième tour',
-                        style: TextStyle(
                           color: Colors.white,
+                          size: 20,
+                        ),
+                        label: Text(_isVotingClosed
+                            ? 'Vote clôturé'
+                            : "Supprimer l'élection"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(14, 128, 52, 1),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    const SizedBox(width: 20),
+                    SizedBox(
+                      width: screenWidth*0.35,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          context.push("/second_tour/${widget.id}");
+                        },
+                        label: Text(
+                          'Deuxième tour',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
                       ),
                     ),
-                  ),
+                  ]),
+
+
                   const SizedBox(height: 10),
                   if (loading2)
                     Expanded(
