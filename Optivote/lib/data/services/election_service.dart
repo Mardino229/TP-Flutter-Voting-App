@@ -145,7 +145,7 @@ class ElectionService {
 
     final response = await api.get('election_completed');
 
-    return (response.data.body as List).map((e) => Election.fromJson(e)).toList();
+    return (response.data["body"] as List).map((e) => Election.fromJson(e)).toList();
   }
 
   Future<List<Election>> getAllNotStarted () async{
@@ -159,7 +159,7 @@ class ElectionService {
 
     final response = await api.get('election_notStarted');
 
-    return (response.data.body as List).map((e) => Election.fromJson(e)).toList();
+    return (response.data["body"] as List).map((e) => Election.fromJson(e)).toList();
   }
 
   Future<Map<String, dynamic>> secondTour (String id, Map<String, dynamic> data) async{

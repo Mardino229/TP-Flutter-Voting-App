@@ -24,74 +24,86 @@ class _CreateVotePageState extends State<CreateVotePage> {
   String? _endError;
 
   createElection() async {
-      setState(() {
-        loading = true;
-      });
-      try {
-        print(_startDate);
-        Map<String, dynamic> data = {
-          'name': _titreController.text,
-          'start_date': _startDateController.text,
-          'end_date': _endDateController.text,
-        };
-        final response = await electionService.create(data);
+    setState(() {
+      loading = true;
+    });
+    try {
+      print(_startDate);
+      Map<String, dynamic> data = {
+        'name': _titreController.text,
+        'start_date': _startDateController.text,
+        'end_date': _endDateController.text,
+      };
+      final response = await electionService.create(data);
 
-        if (response["success"]){
-          // Election election = Election.fromJson(response["body"]);
-          // context.push("/detail_election/${election.id}");
-          context.push("/dashboard_vote");
-          Fluttertoast.showToast(msg: response["message"]);
-
-        }
-        // dispose();
-
-      } on DioException catch (e) {
-
-        if (e.response != null) {
-          print(e.response?.data["errors"]);
-          final errors = e.response?.data['errors'];
-          errors.forEach((key, value) {
-            print('$key: $value'); // Affiche chaque erreur
-          });
-          //
-          // print(formattedErrors);
-          // Map<String, String> errors = e.response?.data["errors"];
-
-          setState(() {
-            if (errors["start_date"]!=null){
-            _startError =errors["start_date"][0].toString();
-            }
-            if (errors["end_date"]!=null){
-              _endError = errors["end_date"][0].toString();
-            }
-          });
-
-          print(e.response?.statusCode);
-        } else {
-          // Something happened in setting up or sending the request that triggered an Error
-          print(e.requestOptions);
-          print(e.message);
-        }
-
-        Fluttertoast.showToast(msg: "Une erreur est survenue");
-
-      } finally {
-        setState(() {
-          loading = false;
-        });
+      if (response["success"]) {
+        // Election election = Election.fromJson(response["body"]);
+        // context.push("/detail_election/${election.id}");
+        context.push("/dashboard_vote");
+        Fluttertoast.showToast(msg: response["message"]);
       }
+      // dispose();
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print(e.response?.data["errors"]);
+        final errors = e.response?.data['errors'];
+        errors.forEach((key, value) {
+          print('$key: $value'); // Affiche chaque erreur
+        });
+        //
+        // print(formattedErrors);
+        // Map<String, String> errors = e.response?.data["errors"];
+
+        setState(() {
+          if (errors["start_date"] != null) {
+            _startError = errors["start_date"][0].toString();
+          }
+          if (errors["end_date"] != null) {
+            _endError = errors["end_date"][0].toString();
+          }
+        });
+
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _darkGreen,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          "Créer une élection",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 2,
+      ),
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildHeader(),
                   _buildVoteForm(),
                   _buildCreateButton(),
                 ],
@@ -103,112 +115,175 @@ class _CreateVotePageState extends State<CreateVotePage> {
     );
   }
 
-  // Section 1 : Bouton de retour et titre "Créer une élection"
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              // Action pour retourner en arrière à mettre ici
-              Navigator.of(context).pop();
-            },
-          ),
-          SizedBox(width: 8),
-          Text(
-            "Créer une élection", // Changement du titre
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  // Section 3 : Formulaire de vote
+  Widget _buildVoteForm() {
+    return Container(
+      margin: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: Offset(0, 2),
           ),
         ],
       ),
-    );
-  }
-
-  // Section 3 : Formulaire de vote
-  Widget _buildVoteForm() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(16),
-            color: _darkGreen,
+            decoration: BoxDecoration(
+              color: _darkGreen,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
             child: Text(
-              "Élection", // Changement du titre
-              style: TextStyle(color: Colors.white, fontSize: 18),
+              "Élection",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          SizedBox(height: 8),
-          TextFormField(
-            decoration: InputDecoration(
-                labelText: "Titre",
-            ),
-            controller: _titreController,
-          ),
-          SizedBox(height: 16),
-          // Champ pour la date de début avec sélecteur de date
-          InkWell(
-            onTap: () async {
-              final DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: _startDate ?? DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2100),
-              );
-              if (pickedDate != null) {
-                String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                setState(() {
-                  _startDateController.text = formattedDate; // Afficher la date formatée dans le champ
-                });
-              }
-            },
-            child: InputDecorator(
-              decoration: InputDecoration(
-                labelText: "Date de début",
-                errorText: _startError,
-              ),
-              child: Text(
-                _startDateController.text != ""
-                    ? _startDateController.text
-                    : "Sélectionnez une date",
-              ),
-
-            ),
-          ),
-          SizedBox(height: 16),
-          // Champ pour la date de fin avec sélecteur de date
-          InkWell(
-            onTap: () async {
-              final DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: _endDate ?? DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2100),
-              );
-              if (pickedDate != null) {
-                String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                setState(() {
-                  _endDateController.text = formattedDate; // Afficher la date formatée dans le champ
-                });
-              }
-            },
-            child: InputDecorator(
-              decoration: InputDecoration(
-                labelText: "Date de fin",
-                errorText: _endError,
-              ),
-              child: Text(
-                _endDateController.text != ""
-                    ? _endDateController.text
-                    : "Sélectionnez une date",
-              ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _titreController,
+                  decoration: InputDecoration(
+                    labelText: "Titre",
+                    labelStyle: TextStyle(color: _darkGreen),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: _darkGreen),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey.shade50,
+                  ),
+                ),
+                SizedBox(height: 20),
+                _buildDateField(
+                  label: "Date de début",
+                  controller: _startDateController,
+                  errorText: _startError,
+                  onTap: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _startDate ?? DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                              primary: _darkGreen,
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (pickedDate != null) {
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                      setState(() {
+                        _startDateController.text = formattedDate;
+                      });
+                    }
+                  },
+                ),
+                SizedBox(height: 20),
+                _buildDateField(
+                  label: "Date de fin",
+                  controller: _endDateController,
+                  errorText: _endError,
+                  onTap: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _endDate ?? DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                              primary: _darkGreen,
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (pickedDate != null) {
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                      setState(() {
+                        _endDateController.text = formattedDate;
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDateField({
+    required String label,
+    required TextEditingController controller,
+    required VoidCallback onTap,
+    String? errorText,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: _darkGreen),
+          errorText: errorText,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: _darkGreen),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              controller.text.isNotEmpty
+                  ? controller.text
+                  : "Sélectionnez une date",
+              style: TextStyle(
+                color: controller.text.isNotEmpty
+                    ? Colors.black87
+                    : Colors.grey.shade600,
+              ),
+            ),
+            Icon(Icons.calendar_today, color: _darkGreen),
+          ],
+        ),
       ),
     );
   }
@@ -216,54 +291,35 @@ class _CreateVotePageState extends State<CreateVotePage> {
   // Section 6 : Bouton de création
   Widget _buildCreateButton() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _darkGreen,
-            minimumSize: Size(200, 50),
+      padding: const EdgeInsets.all(24.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _darkGreen,
+          minimumSize: Size(double.infinity, 56),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-          onPressed: createElection,
-          //     () {
-          //   showDialog(
-          //     context: context,
-          //     builder: (context) {
-          //       return AlertDialog(
-          //         content: Column(
-          //           mainAxisSize: MainAxisSize.min,
-          //           children: [
-          //             Icon(Icons.check_circle, color: _darkGreen, size: 50),
-          //             SizedBox(height: 16),
-          //             Text(
-          //                 "Votre élection a bien été créée ! Optivote vous permet de la suivre."),
-          //           ],
-          //         ),
-          //         actions: [
-          //           TextButton(
-          //             onPressed: () {
-          //               Navigator.pop(context);
-          //             },
-          //             child: Text("OK"),
-          //           ),
-          //         ],
-          //       );
-          //     },
-          //   );
-          // },
-          child:!loading? Text(
-            "Créer l'élection", // Changement du texte du bouton
-            style: TextStyle(color: Colors.white),
-          ): SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              color: Colors.white,
-            ),
-          ),
+          elevation: 2,
         ),
+        onPressed: !loading ? createElection : null,
+        child: !loading
+            ? Text(
+                "Créer l'élection",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.white,
+                ),
+              ),
       ),
     );
   }
 }
-

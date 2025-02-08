@@ -27,8 +27,8 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
       context: context,
       initialDate: isStartDate
           ? (startDate ?? DateTime.now())
-          : (endDate ?? DateTime.now()),
-      firstDate: isStartDate ? DateTime(2000) : (startDate ?? DateTime(2000)),
+          : (endDate ?? startDate ?? DateTime.now()),
+      firstDate: isStartDate ? DateTime.now() : startDate ?? DateTime.now(),
       lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(
@@ -55,6 +55,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
       });
     }
   }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       print('Date de début: ${DateFormat('yyyy/MM/dd').format(startDate!)}');
@@ -89,7 +90,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
         };
         final response = await electionService.secondTour(widget.id, data);
 
-        if (response["success"]){
+        if (response["success"]) {
           // Election election = Election.fromJson(response["body"]);
           // context.push("/detail_election/${election.id}");
 
@@ -108,7 +109,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
             ),
           );
           context.push("/dashboard_vote");
-        } else{
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -124,9 +125,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
           );
         }
         // dispose();
-
       } on DioException catch (e) {
-
         if (e.response != null) {
           print(e.response?.data["errors"]);
           final errors = e.response?.data['errors'];
@@ -154,7 +153,6 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
         }
 
         Fluttertoast.showToast(msg: "Une erreur est survenue");
-
       } finally {
         setState(() {
           loading = false;
@@ -171,10 +169,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
         title: const Text(
           'Deuxième Tour',
           style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            color: Colors.white
-          ),
+              fontWeight: FontWeight.w600, fontSize: 20, color: Colors.white),
         ),
         backgroundColor: Color.fromRGBO(14, 128, 52, 1),
         elevation: 0,
@@ -305,7 +300,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
                                 }
                                 if (startDate != null &&
                                     endDate!.isBefore(startDate!)) {
-                                  return 'La date de fin doit être après la date de début';
+                                  return 'La date de fin doit être égale ou après la date de début';
                                 }
                                 return null;
                               },
@@ -330,21 +325,23 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
                       ),
                       elevation: 0,
                     ),
-                    child:!loading? Text('Créer',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                        color: Colors.white
-                      ),
-                    ): SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      color: Colors.white,
-                    ),
-                  ),
+                    child: !loading
+                        ? Text(
+                            'Créer',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                                color: Colors.white),
+                          )
+                        : SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ],

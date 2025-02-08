@@ -64,19 +64,18 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
     ),
   ];
 
-  retrieveElection () async {
+  retrieveElection() async {
     setState(() {
       loading = true;
     });
     try {
       election = await electionService.get(widget.id);
       setState(() {
-        loading=false;
+        loading = false;
       });
       retrieveDetailsElection();
       retrieveResultat();
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.statusCode);
@@ -87,24 +86,23 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       setState(() {
         loading = false;
       });
     }
   }
-  retrieveDetailsElection () async {
+
+  retrieveDetailsElection() async {
     setState(() {
       loading3 = true;
     });
     try {
       electionDetails = await electionService.getDetails(widget.id);
       setState(() {
-        loading3=false;
+        loading3 = false;
       });
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.statusCode);
@@ -115,24 +113,23 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       setState(() {
         loading3 = false;
       });
     }
   }
-  retrieveResultat () async {
+
+  retrieveResultat() async {
     setState(() {
       loading2 = true;
     });
     try {
       resultatElection = await resultatService.getAll(widget.id);
       setState(() {
-        loading2=false;
+        loading2 = false;
       });
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.statusCode);
@@ -143,13 +140,13 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       setState(() {
         loading2 = false;
       });
     }
   }
+
   deleteElection() async {
     setState(() {
       loading4 = true;
@@ -157,9 +154,9 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
     try {
       final response = await electionService.delete(widget.id);
       setState(() {
-        loading4=false;
+        loading4 = false;
       });
-      if (response["success"]){
+      if (response["success"]) {
         context.push("/dashboard_vote");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -174,7 +171,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
             ),
           ),
         );
-      } else{
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -190,7 +187,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
         );
       }
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.statusCode);
@@ -201,7 +197,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       setState(() {
         loading = false;
@@ -236,7 +231,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
           if (loading)
             Expanded(
               child: Container(
-                 // Fond semi-transparent
                 child: Center(
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
@@ -246,167 +240,176 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
               ),
             ),
           if (!loading)
-          Container(
-            width: screenWidth * 1,
-            height: screenHeight * 0.25,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/image 1.png",),
-                    opacity: 0.89,
-                    fit: BoxFit.cover),
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40),bottomRight: Radius.circular(40),)
-            ),
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     Text(
-                      "${election.name}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+            Container(
+              width: screenWidth * 1,
+              height: screenHeight * 0.25,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                        "assets/image 1.png",
                       ),
-                    ),
-                     Text(
-                      '${election.startDate} au ${election.endDate}',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
+                      opacity: 0.89,
+                      fit: BoxFit.cover),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40),
+                  )),
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back, color: Colors.white),
+                            onPressed: () => context.pop(),
+                          ),
+                          Text(
+                            "${election.name}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const Text(
-                      'Vote unique',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
+                      Text(
+                        '${election.startDate} au ${election.endDate}',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                      const Text(
+                        'Vote unique',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
           if (!loading3 && !loading)
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
                     children: [
-                      _buildGridItem(
-                        icon: Icons.timer,
-                        title: "${electionDetails.delay}",
-                        isActive: !_isVotingClosed,
-                      ),
-                      _buildGridItem(
-                        icon: Icons.people,
-                        title: '${electionDetails.nbrVote} votants',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  electionDetails.lead!.length > 0 || electionDetails.lead!.length ==1  ?
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                        _buildGridItem(
-                          title: '${electionDetails.lead?[0]}',
-                          showTrophy: true,
-                        ),
-
-                      _buildGridItem(
-                        title: '${electionDetails.lead?[1]}',
-                        showTrophy2: true,
-                      ),
-                    ],
-                  ):
-                  Center(
-                    child: Text("Aucune option en tête"),
-                  ),
-
-                  const SizedBox(height: 20),
-                  Row(children:[
-                    SizedBox(
-                      width: screenWidth*0.35,
-                      child: ElevatedButton.icon(
-                        onPressed: _isVotingClosed ? null : ()=>_showDeleteDialog(context),
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        label: Text(_isVotingClosed
-                            ? 'Vote clôturé'
-                            : "Supprimer l'élection"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    SizedBox(
-                      width: screenWidth*0.35,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          context.push("/second_tour/${widget.id}");
-                        },
-                        label: Text(
-                          'Deuxième tour',
-                          style: TextStyle(
-                            color: Colors.white,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildGridItem(
+                            icon: Icons.timer,
+                            title: "${electionDetails.delay}",
+                            isActive: !_isVotingClosed,
                           ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(14, 128, 52, 1),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
+                          _buildGridItem(
+                            icon: Icons.people,
+                            title: '${electionDetails.nbrVote} votants',
+                          ),
+                        ],
                       ),
-                    ),
-                  ]),
-
-
-                  const SizedBox(height: 10),
-                  if (loading2)
-                    Expanded(
-                      child: Container(
-                        // Fond semi-transparent
-                        child: Center(
+                      const SizedBox(height: 16),
+                      electionDetails.lead!.length > 0 ||
+                              electionDetails.lead!.length == 1
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                _buildGridItem(
+                                  title: '${electionDetails.lead?[0]}',
+                                  showTrophy: true,
+                                ),
+                                if(electionDetails.lead!.length > 1) 
+                                _buildGridItem(
+                                  title: '${electionDetails.lead?[1]}',
+                                  showTrophy2: true,
+                                ),
+                              ],
+                            )
+                          : Center(
+                              child: Text("Aucune option en tête"),
+                            ),
+                      const SizedBox(height: 20),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: screenWidth * 0.9,
+                            child: ElevatedButton.icon(
+                              onPressed: _isVotingClosed
+                                  ? null
+                                  : () => _showDeleteDialog(context),
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              label: Text(_isVotingClosed
+                                  ? 'Vote clôturé'
+                                  : "Supprimer l'élection"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                                foregroundColor: Colors.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: screenWidth * 0.9,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                context.push("/second_tour/${widget.id}");
+                              },
+                              icon: const Icon(
+                                Icons.how_to_vote,
+                                color: Colors.white,
+                              ),
+                              label: Text(
+                                'Deuxième tour',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      if (loading2)
+                        Center(
                           child: CircularProgressIndicator(
                             strokeWidth: 3,
                             color: Colors.green.shade600,
                           ),
                         ),
-                      ),
-                    ),
-                  if (!loading2 && resultatElection.length==0)
-                    Expanded(
-                      child: Container(
-                        child: Center(
+                      if (!loading2 && resultatElection.isEmpty)
+                        Center(
                           child: Text("Aucun candidat ajouté à cette élection"),
                         ),
-                      )
-                    ),
-                  if (!loading2 && resultatElection.length>0)
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: resultatElection.length,
-                        itemBuilder: (context, index) =>
-                            _buildResultCard(resultatElection[index]),
-                      ),
-                    ),
-                ],
+                      if (!loading2 && resultatElection.isNotEmpty)
+                        ...resultatElection
+                            .map((resultat) => _buildResultCard(resultat))
+                            .toList(),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
           if (loading3)
             Expanded(
               child: Container(
@@ -421,23 +424,26 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          context.push("/add_candidat/${widget.id}");
-        },
-        backgroundColor: Color.fromRGBO(14, 128, 52, 1),
-        elevation: 4,
-        icon: Icon(Icons.add, color: Colors.white),
-        label: Text(
-          "Ajouter les candidats",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 20.0),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            context.push("/add_candidat/${widget.id}");
+          },
+          backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+          elevation: 4,
+          icon: Icon(Icons.add, color: Colors.white),
+          label: Text(
+            "Ajouter les candidats",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
-
   }
 
   void _showDeleteDialog(BuildContext context) {
@@ -450,7 +456,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
           ),
           title: Row(
             children: [
-              Icon(Icons.logout, color: Colors.red),
+              Icon(Icons.delete, color: Colors.red),
               SizedBox(width: 10),
               Text(
                 "Supression",
@@ -467,9 +473,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => {
-                Navigator.of(context).pop()
-              },
+              onPressed: () => {Navigator.of(context).pop()},
               child: Text(
                 "Annuler",
                 style: TextStyle(
@@ -486,21 +490,22 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child:!loading?
-              Text(
-                "Supprimer",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ):  SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  color: Colors.white,
-                ),
-              ),
+              child: !loading
+                  ? Text(
+                      "Supprimer",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ],
           actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -617,9 +622,9 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
               children: [
                 Text('${resultat.nbr_vote} votes/${electionDetails.nbrVote}'),
                 Text(
-                  electionDetails.nbrVote==0?
-                  '0/0':
-                  '${(resultat.nbr_vote! / electionDetails.nbrVote! * 100).toStringAsFixed(1)}%',
+                  electionDetails.nbrVote == 0
+                      ? '0/0'
+                      : '${(resultat.nbr_vote! / electionDetails.nbrVote! * 100).toStringAsFixed(1)}%',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],

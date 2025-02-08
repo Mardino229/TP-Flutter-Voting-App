@@ -39,6 +39,7 @@ dependencies:
   dio: ^5.7.0
   shared_preferences: ^2.4.0
   fluttertoast: ^8.2.10
+  flutter_native_splash: ^2.3.7
 
 dev_dependencies:
   flutter_test:
@@ -91,3 +92,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/logo/Fichier 2@4x.png
+  
+  android_12:
+    image: assets/logo/Fichier 2@4x.png
+    color: "#FFFFFF"
+    
+  web: false
+

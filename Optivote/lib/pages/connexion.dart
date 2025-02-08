@@ -31,15 +31,15 @@ class _LoginState extends State<Login> {
         loading = true;
       });
       try {
-
         Map<String, dynamic> data = {
           'email': _emailController.text,
           'password': _passwordController.text
         };
         final response = await userService.login(data);
 
-        if (response["success"]){
-          AuthenticatedUser authUser = AuthenticatedUser.fromJson(response["body"]);
+        if (response["success"]) {
+          AuthenticatedUser authUser =
+              AuthenticatedUser.fromJson(response["body"]);
 
           Fluttertoast.showToast(msg: "Utilisateur connecté avec succès");
           // Initialiser une instance de shared preference
@@ -52,9 +52,9 @@ class _LoginState extends State<Login> {
           sharedPref.setInt("id", authUser.id!);
           _emailController.text = "";
           _passwordController.text = "";
-          if (authUser.role=="user"){
+          if (authUser.role == "user") {
             context.push("/home_user");
-          }else{
+          } else {
             context.push("/dashboard_vote");
           }
         } else {
@@ -63,9 +63,7 @@ class _LoginState extends State<Login> {
           });
         }
         // dispose();
-
       } on DioException catch (e) {
-
         if (e.response != null) {
           print(e.response?.data["errors"]);
           final errors = e.response?.data['errors'];
@@ -77,8 +75,11 @@ class _LoginState extends State<Login> {
           // Map<String, String> errors = e.response?.data["errors"];
 
           setState(() {
-            _emailError =errors["email"]==null?"": errors["email"][0].toString();
-            _passwordError = errors["password"]==null?"":errors["password"][0].toString();
+            _emailError =
+                errors["email"] == null ? "" : errors["email"][0].toString();
+            _passwordError = errors["password"] == null
+                ? ""
+                : errors["password"][0].toString();
           });
 
           print(e.response?.statusCode);
@@ -89,13 +90,11 @@ class _LoginState extends State<Login> {
         }
 
         Fluttertoast.showToast(msg: "Une erreur est survenue");
-
       } finally {
         setState(() {
           loading = false;
         });
       }
-
     }
   }
 
@@ -131,7 +130,8 @@ class _LoginState extends State<Login> {
       //   context.push('/home_user');
       // }
     });
-    return _validateEmail(_emailController.text)&&_validatePassword(_passwordController.text);
+    return _validateEmail(_emailController.text) &&
+        _validatePassword(_passwordController.text);
   }
 
   @override
@@ -378,46 +378,50 @@ class _LoginState extends State<Login> {
                                   foregroundColor:
                                       WidgetStateProperty.all(Colors.white)),
                               onPressed: loginUser,
-                              child:!loading? Text(
-                                "Se connecter",
-                                style: TextStyle(
-                                    fontSize: screenWidth * 0.045,
-                                    fontWeight: FontWeight.w300),
-                              ):  SizedBox(
-                              height: 15,
-                              width: 15,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3,
-                                color: Colors.white,
-                              ),
-                            ),
+                              child: !loading
+                                  ? Text(
+                                      "Se connecter",
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.045,
+                                          fontWeight: FontWeight.w300),
+                                    )
+                                  : SizedBox(
+                                      height: 15,
+                                      width: 15,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             ),
                             SizedBox(
                               height: screenHeight * 0.026,
                             ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  width: screenWidth * 0.1,
-                                ),
-                                Text(
-                                  "Vous n'avez pas de compte?",
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(8, 109, 42, 1),
+                                Flexible(
+                                  child: Text(
+                                    "Vous n'avez pas de compte?",
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(8, 109, 42, 1),
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 TextButton(
-                                    onPressed: () {
-                                      context.push('/inscription');
-                                    },
-                                    child: Text(
-                                      "S'inscrire",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(8, 109, 42, 1),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )),
+                                  onPressed: () {
+                                    context.push('/inscription');
+                                  },
+                                  child: Text(
+                                    "S'inscrire",
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(8, 109, 42, 1),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ],
                             )
                           ],

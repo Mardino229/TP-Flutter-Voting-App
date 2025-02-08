@@ -70,7 +70,7 @@ class _HomeUserPageState extends State<HomeUserPage>
   bool loading3 = false;
   int _totalVotes = 0;
 
-  electionInProgress () async {
+  electionInProgress() async {
     setState(() {
       loading1 = true;
       loading3 = true;
@@ -84,7 +84,6 @@ class _HomeUserPageState extends State<HomeUserPage>
       });
       hasVoted();
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.statusCode);
@@ -95,14 +94,14 @@ class _HomeUserPageState extends State<HomeUserPage>
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       setState(() {
         loading1 = false;
       });
     }
   }
-  retrieveResultat () async {
+
+  retrieveResultat() async {
     try {
       resultatElection = await resultatService.getAll(election.id.toString());
       setState(() {});
@@ -110,7 +109,6 @@ class _HomeUserPageState extends State<HomeUserPage>
         loading3 = false;
       });
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.statusCode);
@@ -121,14 +119,14 @@ class _HomeUserPageState extends State<HomeUserPage>
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       setState(() {
         loading3 = false;
       });
     }
   }
-  hasVoted () async {
+
+  hasVoted() async {
     try {
       final response = await voteService.verifyVote(election.id.toString());
       print(response["success"]);
@@ -138,7 +136,6 @@ class _HomeUserPageState extends State<HomeUserPage>
       Fluttertoast.showToast(msg: response["message"]);
       retrieveResultat();
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.statusCode);
@@ -149,70 +146,82 @@ class _HomeUserPageState extends State<HomeUserPage>
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       // setState(() {
       //   loading3 = false;
       // });
     }
   }
+
   vote(id) async {
-    setState(() {
-      loading2 = true;
-    });
-    try {
-      final pref = await SharedPreferences.getInstance();
-      int? userId = pref.getInt("id") ?? null;
-      Map<String, dynamic> data = {
-        "election_id": election.id,
-        "candidat_id": id,
-        "user_id": userId
-      };
-      final response = await voteService.vote(data);
-
-      Fluttertoast.showToast(msg: response["message"]);
-      retrieveResultat();
-      hasVoted();
-    } on DioException catch (e) {
-
-      if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
-      } else {
-        // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
-      }
-
-      Fluttertoast.showToast(msg: "Une erreur est survenue");
-
-    } finally {
+    if (_selectedCandidate != null) {
       setState(() {
-        loading2 = false;
+        loading2 = true;
       });
+      try {
+        final pref = await SharedPreferences.getInstance();
+        int? userId = pref.getInt("id") ?? null;
+        Map<String, dynamic> data = {
+          "election_id": election.id,
+          "candidat_id": id,
+          "user_id": userId
+        };
+        final response = await voteService.vote(data);
+
+        Fluttertoast.showToast(msg: response["message"]);
+        retrieveResultat();
+        hasVoted();
+      } on DioException catch (e) {
+        if (e.response != null) {
+          print(e.response?.data);
+          print(e.response?.statusCode);
+        } else {
+          // Something happened in setting up or sending the request that triggered an Error
+          print(e.requestOptions);
+          print(e.message);
+        }
+
+        Fluttertoast.showToast(msg: "Une erreur est survenue");
+      } finally {
+        setState(() {
+          loading2 = false;
+        });
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Vote soumis pour ${_selectedCandidate!.name}'),
+          backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+        ),
+      );
+    }
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Veuillez sélectionner un candidat'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
+
   logout() async {
     setState(() {
       loading = true;
     });
     try {
-
       final response = await authentificateService.logout();
       print(response);
-      if (response["success"]){
+      if (response["success"]) {
         Fluttertoast.showToast(msg: response["message"]);
         final sharedPref = await SharedPreferences.getInstance();
         sharedPref.setString("token", "");
         sharedPref.setInt("id", 0);
         sharedPref.setString("role", "");
         context.push("/");
-      }else{
+      } else {
         Fluttertoast.showToast(msg: response["message"]);
       }
-
     } on DioException catch (e) {
-
       if (e.response != null) {
         print(e.response);
         print(e.response?.statusCode);
@@ -223,7 +232,6 @@ class _HomeUserPageState extends State<HomeUserPage>
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
-
     } finally {
       setState(() {
         loading = false;
@@ -234,7 +242,7 @@ class _HomeUserPageState extends State<HomeUserPage>
   @override
   void initState() {
     super.initState();
-    // electionInProgress();
+    electionInProgress();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -286,43 +294,29 @@ class _HomeUserPageState extends State<HomeUserPage>
     return Scaffold(
       backgroundColor: Color.fromRGBO(243, 246, 244, 1),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromRGBO(14, 128, 52, 1),
         elevation: 0,
         title: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 15,
-                spreadRadius: 1,
-                offset: Offset(0, 4),
-              ),
-            ],
           ),
-          child: loading1 ?
-          SizedBox(
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              color: Colors.green,
-            ),
-          ):election.name!=null?
-          Text(
-            "${election.name}",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: screenWidth * 0.05,
-              fontWeight: FontWeight.bold,
-            ),
-          ): Text(
-              "Aucune élection en cours",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: screenWidth * 0.05,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: loading1
+              ? SizedBox(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 3,
+                  ),
+                )
+              : Text(
+                  "OptiVote",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
         ),
         centerTitle: true,
         actions: [
@@ -355,268 +349,356 @@ class _HomeUserPageState extends State<HomeUserPage>
           ),
         ],
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              SizedBox(height: screenHeight * 0.02),
-              Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                        width: screenWidth * 0.9,
-                        height: screenHeight * 0.32,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("assets/image 1.png"),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              left: screenWidth * 0.04,
-                              top: screenHeight * 0.04),
-                          child:loading1 ?
-                          SizedBox(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 3,
-                              color: Colors.green,
-                            ),
-                          ):election.name!=null?
+      body: loading1
+          ? Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: Colors.green,
+              ),
+            )
+          : election.name == null
+              ? Center(
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    color: Color.fromRGBO(14, 128, 52, 1),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.how_to_vote,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          SizedBox(height: 20),
                           Text(
-                            "${election.name}\nChoisissez votre candidat",
+                            "Prochaine élection pour bientôt",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.05,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
-                            ),
-                          ): Text(
-                              "Aucune élection en cours",
-                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenWidth * 0.05,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        )),
-                    Positioned(
-                      bottom: -screenHeight * 0.03,
-                      left: screenWidth * 0.025,
-                      child: Container(
-                        width: screenWidth * 0.85,
-                        height: screenHeight * 0.06,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                              offset: Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Image(
-                              image: AssetImage(
-                                  'assets/streamline_politics-vote-2-solid.png'),
-                              height: 70,
-                            ),
-                            Text(
-                              "$nbreVotes\nVotes",
-                              style: TextStyle(fontSize: screenWidth * 0.02),
-                            ),
-                            SizedBox(width: screenWidth * 0.4),
-                            Icon(Icons.person_outline_outlined, size: 40),
-                            SizedBox(width: screenWidth * 0.01),
-                            Text(
-                              "$nbreVotants\nVotants",
-                              style: TextStyle(fontSize: screenWidth * 0.02),
-                            )
-                          ],
-                        ),
+                        ],
                       ),
                     ),
-                  ]
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.04),
-
-              // Candidate Selection Section
-              Center(
-                child: Container(
-                  width: screenWidth * 0.9,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: loading3? [
-                      SizedBox(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ] : resultatElection.isNotEmpty?[
-                      Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          "Candidats",
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.05,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(14, 128, 52, 1),
-                          ),
-                        ),
-                      ),
-                      ...resultatElection
-                          .map((resultat) => Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: _selectedCandidate == resultat.candidat
-                                  ? Color.fromRGBO(14, 128, 52, 1)
-                                  : Colors.grey[300]!,
-                              width: 2),
-                          borderRadius: BorderRadius.circular(15),
-                          color: _selectedCandidate == resultat.candidat
-                              ? Color.fromRGBO(14, 128, 52, 0.1)
-                              : Colors.white,
-                        ),
-                        child: ListTile(
-                          onTap: !_hasVoted
-                              ? () {
-                            setState(() {
-                              _selectedCandidate = resultat.candidat;
-                            });
-                          }
-                              : null,
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundImage:
-                            NetworkImage('${resultat.candidat?.photo}'),
-                          ),
-                          title: Text(
-                            "${resultat.candidat?.name}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          subtitle: _hasVoted
-                              ? Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${resultat.candidat?.description}",
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              LinearProgressIndicator(
-                                value: resultat.percentage ?? 0,
-                                backgroundColor: Colors.grey[300],
-                                valueColor:
-                                AlwaysStoppedAnimation<Color>(
-                                    Color.fromRGBO(
-                                        14, 128, 52, 1)),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '${resultat.percentage ?? 0}%',
-                                style: TextStyle(
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          )
-                              : Text(
-                            "${resultat.candidat?.description}",
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          trailing: !_hasVoted
-                              ? Radio<Candidat?>(
-                            value: resultat.candidat,
-                            groupValue: _selectedCandidate,
-                            activeColor:
-                            Color.fromRGBO(14, 128, 52, 1),
-                            onChanged: (Candidat? value) {
-                              setState(() {
-                                _selectedCandidate = value;
-                              });
-                            },
-                          )
-                              : null,
-                        ),
-                      )),
-                      if (!_hasVoted)
+                )
+              : FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        SizedBox(height: screenHeight * 0.02),
                         Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 16.0, horizontal: 16),
-                            child: ElevatedButton.icon(
-                              onPressed: ()=>{
-                                vote(_selectedCandidate?.id)
-                              },
-                              icon:
-                              Icon(Icons.how_to_vote, color: Colors.white),
-                              label: !loading2?
-                              Text(
-                                "Valider mon vote",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: screenWidth * 0.04,
+                          child: Stack(clipBehavior: Clip.none, children: [
+                            Container(
+                                width: screenWidth * 0.9,
+                                height: screenHeight * 0.32,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage("assets/image 1.png"),
+                                      fit: BoxFit.cover),
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                              ): SizedBox(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  color: Colors.green,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: screenWidth * 0.04,
+                                      top: screenHeight * 0.04),
+                                  child: loading1
+                                      ? SizedBox(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 3,
+                                            color: Colors.green,
+                                          ),
+                                        )
+                                      : election.name != null
+                                          ? Text(
+                                              "${election.name}\nChoisissez votre candidat dans la période du ${election.startDate} au ${election.endDate}",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: screenWidth * 0.05,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          : Text(
+                                              "Aucune élection en cours",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: screenWidth * 0.05,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                )),
+                            Positioned(
+                              bottom: -screenHeight * 0.03,
+                              left: screenWidth * 0.025,
+                              child: Container(
+                                width: screenWidth * 0.85,
+                                height: screenHeight * 0.06,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                      image: AssetImage(
+                                          'assets/streamline_politics-vote-2-solid.png'),
+                                      height: 70,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      "$nbreVotes\nVotes",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: screenWidth * 0.02),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                  Color.fromRGBO(14, 128, 52, 1),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: screenWidth * 0.2,
-                                      vertical: 15),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(32))),
+                            ),
+                          ]),
+                        ),
+                        SizedBox(height: screenHeight * 0.04),
+
+                        // Candidate Selection Section
+                        Center(
+                          child: Container(
+                            width: screenWidth * 0.9,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: loading3
+                                  ? [
+                                      SizedBox(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ]
+                                  : resultatElection.isNotEmpty
+                                      ? [
+                                          Padding(
+                                            padding: EdgeInsets.all(16.0),
+                                            child: Text(
+                                              "Candidats",
+                                              style: TextStyle(
+                                                fontSize: screenWidth * 0.05,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    14, 128, 52, 1),
+                                              ),
+                                            ),
+                                          ),
+                                          ...resultatElection.map((resultat) =>
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 8),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color:
+                                                          _selectedCandidate ==
+                                                                  resultat
+                                                                      .candidat
+                                                              ? Color.fromRGBO(
+                                                                  14,
+                                                                  128,
+                                                                  52,
+                                                                  1)
+                                                              : Colors
+                                                                  .grey[300]!,
+                                                      width: 2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: _selectedCandidate ==
+                                                          resultat.candidat
+                                                      ? Color.fromRGBO(
+                                                          14, 128, 52, 0.1)
+                                                      : Colors.white,
+                                                ),
+                                                child: ListTile(
+                                                  onTap: !_hasVoted
+                                                      ? () {
+                                                          setState(() {
+                                                            _selectedCandidate =
+                                                                resultat
+                                                                    .candidat;
+                                                          });
+                                                        }
+                                                      : null,
+                                                  leading: CircleAvatar(
+                                                    radius: 30,
+                                                    backgroundImage: NetworkImage(
+                                                        '${resultat.candidat?.photo}'),
+                                                  ),
+                                                  title: Text(
+                                                    "${resultat.candidat?.name}",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black87,
+                                                    ),
+                                                  ),
+                                                  subtitle: _hasVoted
+                                                      ? Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "${resultat.candidat?.description}",
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[600],
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 8),
+                                                            LinearProgressIndicator(
+                                                              value: resultat
+                                                                      .percentage ??
+                                                                  0,
+                                                              backgroundColor:
+                                                                  Colors.grey[
+                                                                      300],
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                          Color>(
+                                                                      Color.fromRGBO(
+                                                                          14,
+                                                                          128,
+                                                                          52,
+                                                                          1)),
+                                                            ),
+                                                            SizedBox(height: 4),
+                                                            Text(
+                                                              '${resultat.percentage ?? 0}%',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      700],
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
+                                                        )
+                                                      : Text(
+                                                          "${resultat.candidat?.description}",
+                                                          style: TextStyle(
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                  trailing: !_hasVoted
+                                                      ? Radio<Candidat?>(
+                                                          value:
+                                                              resultat.candidat,
+                                                          groupValue:
+                                                              _selectedCandidate,
+                                                          activeColor:
+                                                              Color.fromRGBO(14,
+                                                                  128, 52, 1),
+                                                          onChanged: (Candidat?
+                                                              value) {
+                                                            setState(() {
+                                                              _selectedCandidate =
+                                                                  value;
+                                                            });
+                                                          },
+                                                        )
+                                                      : null,
+                                                ),
+                                              )),
+                                          if (!_hasVoted)
+                                            Center(
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 16.0,
+                                                    horizontal: 16),
+                                                child: ElevatedButton.icon(
+                                                  onPressed: () => {
+                                                    vote(_selectedCandidate?.id)
+                                                  },
+                                                  icon: Icon(Icons.how_to_vote,
+                                                      color: Colors.white),
+                                                  label: !loading2
+                                                      ? Text(
+                                                          "Valider mon vote",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                screenWidth *
+                                                                    0.04,
+                                                          ),
+                                                        )
+                                                      : SizedBox(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            strokeWidth: 3,
+                                                            color: Colors.green,
+                                                          ),
+                                                        ),
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          Color.fromRGBO(
+                                                              14, 128, 52, 1),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  screenWidth *
+                                                                      0.2,
+                                                              vertical: 15),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          32))),
+                                                ),
+                                              ),
+                                            ),
+                                        ]
+                                      : [
+                                          SizedBox(
+                                            child: Text("Aucun candidat"),
+                                          )
+                                        ],
                             ),
                           ),
                         ),
-                    ] : [
-                      SizedBox(
-                        child: Text("Aucun candidat"),
-                      )
-                    ],
+                        SizedBox(height: screenHeight * 0.02),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-            ],
-          ),
-        ),
-      ),
     );
   }
 

@@ -19,12 +19,12 @@ import 'package:go_router/go_router.dart';
 
 GoRouter route(token, role) {
   return GoRouter(
-    initialLocation: token==""? '/'
+    initialLocation: token==""? '/connexion'
         : role=="user"? '/home_user' : '/dashboard_vote',
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => Welcome(),
+        builder: (context, state) => const Welcome(),
       ),
       //liens d'authentification
       GoRoute(
@@ -186,11 +186,10 @@ GoRouter route(token, role) {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String ? token = sharedPreferences.getString("token");
-  String ? role = sharedPreferences.getString("role");
+  String? token = sharedPreferences.getString("token");
+  String? role = sharedPreferences.getString("role");
   runApp(MyApp(authToken: token, role: role));
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.authToken, required this.role});
