@@ -349,15 +349,15 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                                   : () => _showDeleteDialog(context),
                               icon: const Icon(
                                 Icons.close,
-                                color: Colors.white,
+                                color: Colors.redAccent,
                                 size: 20,
                               ),
                               label: Text(_isVotingClosed
                                   ? 'Vote clôturé'
                                   : "Supprimer l'élection"),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent,
-                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.redAccent,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 12),
                               ),
@@ -372,16 +372,16 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                               },
                               icon: const Icon(
                                 Icons.how_to_vote,
-                                color: Colors.white,
+                                color: Color.fromRGBO(14, 128, 52, 1),
                               ),
                               label: Text(
                                 'Deuxième tour',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color.fromRGBO(14, 128, 52, 1),
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+                                backgroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 12),
                               ),
@@ -609,7 +609,8 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center, // Centre horizontalement
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Image circulaire
                     // CircleAvatar(
@@ -622,13 +623,22 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                     Container(
                       width: 100, // Définissez la taille souhaitée
                       height: 100,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(1), // Couleur de l'ombre
+                            spreadRadius: 4,                      // Étendue de l'ombre
+                            blurRadius: 10,                        // Flou de l'ombre
+                            offset: Offset(0, 6),                 // Position de l'ombre (x,y)
+                          ),
+                        ],
+                      ),
                       child: Image.network(
                         resultat.candidat?.photo ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
-                    const SizedBox(width: 16),
-
+                    const SizedBox(width: 18),
                     // Nom et description
                     Expanded(
                       child: Column(
