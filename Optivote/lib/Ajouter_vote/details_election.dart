@@ -586,60 +586,109 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Bandeau supérieur
+          Container(
+            height: 40,
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(8, 109, 42, 1), // Couleur verte
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+          ),
+
+          // Contenu principal de la carte
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  child: Image.network(
-                    "${resultat.candidat?.photo}", // Remplace par ton URL
-                    width: 200, // Optionnel
-                    height: 200, // Optionnel
-                    fit: BoxFit.cover, // Ajuste l'image
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Image circulaire
+                    CircleAvatar(
+                      radius: 30, // Taille de l'avatar
+                      backgroundColor: Colors.grey.shade300,
+                      backgroundImage: NetworkImage(
+                        "${resultat.candidat?.photo ?? ''}", // Remplace par ton URL
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+
+                    // Nom et description
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${resultat.candidat?.name ?? 'Nom indisponible'}",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "${resultat.candidat?.description ?? 'Description indisponible'}",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Text(
-                  "${resultat.candidat?.name}",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(height: 12),
+
+                // Votes et pourcentage
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${resultat.nbr_vote ?? 0} votes/${electionDetails.nbrVote ?? 0}',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    Text(
+                      electionDetails.nbrVote == 0
+                          ? '0%'
+                          : '${(resultat.nbr_vote! / electionDetails.nbrVote! * 100).toStringAsFixed(1)}%',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+
+                // Barre de progression
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: resultat.percentage ?? 0,
+                    backgroundColor: Colors.green.shade100,
+                    valueColor:
+                    AlwaysStoppedAnimation<Color>(Colors.green.shade500),
+                    minHeight: 8, // Hauteur de la barre
                   ),
                 ),
               ],
             ),
-            Text(
-              "${resultat.candidat?.description}",
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('${resultat.nbr_vote} votes/${electionDetails.nbrVote}'),
-                Text(
-                  electionDetails.nbrVote == 0
-                      ? '0/0'
-                      : '${(resultat.nbr_vote! / electionDetails.nbrVote! * 100).toStringAsFixed(1)}%',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            LinearProgressIndicator(
-              value: resultat.percentage ?? 0,
-              backgroundColor: Colors.green.shade100,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.green.shade500),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
 }
 
 class VoteOption {

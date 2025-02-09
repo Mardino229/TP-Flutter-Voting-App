@@ -13,18 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/models/candidat.dart';
 import '../data/models/resultat.dart';
 
-class Candidate {
-  final String name;
-  final String photoPath;
-  final String party;
-  int votes;
-
-  Candidate(
-      {required this.name,
-      required this.photoPath,
-      required this.party,
-      this.votes = 0});
-}
 
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
@@ -42,24 +30,7 @@ class _HomeUserPageState extends State<HomeUserPage>
   final VoteService voteService = VoteService();
   final ResultatService resultatService = ResultatService();
   // Candidate selection variables
-  List<Candidate> candidates = [
-    Candidate(
-        name: "Jean Dupont",
-        photoPath: "assets/candidat1.png",
-        party: "Parti Vert"),
-    Candidate(
-        name: "Marie Leclerc",
-        photoPath: "assets/candidat2.png",
-        party: "Parti Social Démocrate"),
-    Candidate(
-        name: "Pierre Martin",
-        photoPath: "assets/candidat3.png",
-        party: "Parti Libéral"),
-    Candidate(
-        name: "Sophie Bernard",
-        photoPath: "assets/candidat4.png",
-        party: "Parti Conservateur")
-  ];
+
   late List<Resultat> resultatElection = [];
   Candidat? _selectedCandidate;
   Election election = new Election();
@@ -104,7 +75,10 @@ class _HomeUserPageState extends State<HomeUserPage>
   retrieveResultat() async {
     try {
       resultatElection = await resultatService.getAll(election.id.toString());
-      setState(() {});
+      _totalVotes = 0;
+      for (int i=0; i<resultatElection.length; i++){
+        _totalVotes += resultatElection[i].nbr_vote!;
+      }
       setState(() {
         loading3 = false;
       });
@@ -280,9 +254,6 @@ class _HomeUserPageState extends State<HomeUserPage>
     }
   }
 
-  double _calculateVotePercentage(Candidate candidate) {
-    return _totalVotes > 0 ? (candidate.votes / _totalVotes) * 100 : 0;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -463,7 +434,7 @@ class _HomeUserPageState extends State<HomeUserPage>
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      "$nbreVotes\nVotes",
+                                      "$_totalVotes\nVotes",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: screenWidth * 0.02),
