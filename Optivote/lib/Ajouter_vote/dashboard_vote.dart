@@ -171,7 +171,7 @@ class _DashboardVoteState extends State<DashboardVote>
     }
   }
 
-  logout() async {
+  Future<void> logout() async {
     setState(() {
       loading = true;
     });
@@ -764,6 +764,7 @@ class _DashboardVoteState extends State<DashboardVote>
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: !loading, // Empêche la fermeture en dehors si en chargement
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -771,9 +772,9 @@ class _DashboardVoteState extends State<DashboardVote>
           ),
           title: Row(
             children: [
-              Icon(Icons.logout, color: Colors.red),
-              SizedBox(width: 10),
-              Text(
+              const Icon(Icons.logout, color: Colors.red),
+              const SizedBox(width: 10),
+              const Text(
                 "Déconnexion",
                 style: TextStyle(
                   fontSize: 20,
@@ -782,13 +783,22 @@ class _DashboardVoteState extends State<DashboardVote>
               ),
             ],
           ),
-          content: Text(
+          content: loading
+              ? const SizedBox(
+            height: 50,
+            child: Center(
+              child: CircularProgressIndicator(), // Affiche le loader
+            ),
+          )
+              : const Text(
             "Voulez-vous vraiment vous déconnecter ?",
             style: TextStyle(fontSize: 16),
           ),
           actions: [
             TextButton(
-              onPressed: () => {Navigator.of(context).pop()},
+              onPressed: loading
+                  ? null // Désactive si en chargement
+                  : () => Navigator.of(context).pop(),
               child: Text(
                 "Annuler",
                 style: TextStyle(
@@ -798,34 +808,40 @@ class _DashboardVoteState extends State<DashboardVote>
               ),
             ),
             ElevatedButton(
-              onPressed: logout,
+              onPressed: loading
+                  ? null // Désactive si en chargement
+                  : () async {
+                await logout(); // Appelle la déconnexion
+                if (!loading) Navigator.of(context).pop(); // Ferme le dialogue
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: !loading
-                  ? Text(
-                      "Déconnexion",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )
-                  : SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3,
-                        color: Colors.white,
-                      ),
-                    ),
+              child: loading
+                  ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.white,
+                ),
+              )
+                  : const Text(
+                "Déconnexion",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
-          actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         );
       },
     );
   }
+
 }
