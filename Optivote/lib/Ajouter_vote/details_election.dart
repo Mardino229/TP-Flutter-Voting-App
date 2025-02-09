@@ -583,6 +583,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -611,11 +612,19 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Image circulaire
-                    CircleAvatar(
-                      radius: 30, // Taille de l'avatar
-                      backgroundColor: Colors.grey.shade300,
-                      backgroundImage: NetworkImage(
-                        "${resultat.candidat?.photo ?? ''}", // Remplace par ton URL
+                    // CircleAvatar(
+                    //   radius: 30, // Taille de l'avatar
+                    //   backgroundColor: Colors.grey.shade300,
+                    //   backgroundImage: NetworkImage(
+                    //     "${resultat.candidat?.photo ?? ''}", // Remplace par ton URL
+                    //   ),
+                    // ),
+                    Container(
+                      width: 100, // Définissez la taille souhaitée
+                      height: 100,
+                      child: Image.network(
+                        resultat.candidat?.photo ?? '',
+                        fit: BoxFit.cover,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -654,7 +663,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${resultat.nbr_vote ?? 0} votes/${electionDetails.nbrVote ?? 0}',
+                      '${resultat.nbr_vote ?? 0} voies/${electionDetails.nbrVote ?? 0}',
                       style: const TextStyle(fontSize: 14),
                     ),
                     Text(
