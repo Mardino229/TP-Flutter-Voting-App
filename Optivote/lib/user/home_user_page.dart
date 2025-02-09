@@ -553,9 +553,7 @@ class _HomeUserPageState extends State<HomeUserPage>
                                                             ),
                                                             SizedBox(height: 8),
                                                             LinearProgressIndicator(
-                                                              value: resultat
-                                                                      .percentage ??
-                                                                  0,
+                                                              value: (resultat.percentage ?? 0)/100,
                                                               backgroundColor:
                                                                   Colors.grey[
                                                                       300],
@@ -570,7 +568,8 @@ class _HomeUserPageState extends State<HomeUserPage>
                                                             ),
                                                             SizedBox(height: 4),
                                                             Text(
-                                                              '${resultat.percentage ?? 0}%',
+                                                              '${(resultat.percentage ?? 0).toStringAsFixed(2)}%',
+                                                              textAlign: TextAlign.center,
                                                               style: TextStyle(
                                                                   color: Colors
                                                                           .grey[

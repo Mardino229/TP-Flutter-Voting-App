@@ -660,7 +660,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                     Text(
                       electionDetails.nbrVote == 0
                           ? '0%'
-                          : '${(resultat.nbr_vote! / electionDetails.nbrVote! * 100).toStringAsFixed(1)}%',
+                          : '${(resultat.nbr_vote! / electionDetails.nbrVote! * 100).toStringAsFixed(2)}%',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -674,7 +674,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
-                    value: resultat.percentage ?? 0,
+                    value: (resultat.percentage ?? 0)/100,
                     backgroundColor: Colors.green.shade100,
                     valueColor:
                     AlwaysStoppedAnimation<Color>(Colors.green.shade500),

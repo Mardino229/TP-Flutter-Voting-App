@@ -58,7 +58,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
           FadeTransition(
             opacity: _animation,
             child: Image(
-              image: const AssetImage('assets/logo/60.png'),
+              image: const AssetImage('assets/logo/Fichier 1@4x.png'),
               width: screenWidth * 0.7,
             ),
           ),
