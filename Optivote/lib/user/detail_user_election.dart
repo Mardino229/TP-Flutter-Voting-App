@@ -13,16 +13,16 @@ import 'package:optivote/pages/addCandidat.dart';
 import '../data/models/election.dart';
 import '../data/services/election_service.dart';
 
-class ElectionDetailsScreen extends StatefulWidget {
+class ElectionDetail extends StatefulWidget {
   final String id;
 
-  const ElectionDetailsScreen({super.key, required this.id});
+  const ElectionDetail({super.key, required this.id});
 
   @override
-  State<ElectionDetailsScreen> createState() => _ElectionDetailsScreenState();
+  State<ElectionDetail> createState() => _ElectionDetailState();
 }
 
-class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
+class _ElectionDetailState extends State<ElectionDetail> {
   // État pour le timer
   String _timerValue = '12:00:00';
   // État pour le nombre de votants
@@ -45,7 +45,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       loading = true;
     });
     try {
-      election = await electionService.get(widget.id);
+      election = await electionService.getByUser(widget.id);
       setState(() {
         loading = false;
       });
@@ -122,66 +122,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       });
     }
   }
-
-  deleteElection() async {
-    setState(() {
-      loading4 = true;
-    });
-    try {
-      final response = await electionService.delete(widget.id);
-      setState(() {
-        loading4 = false;
-      });
-      if (response["success"]) {
-        context.push("/dashboard_vote");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${response["message"]}',
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-            backgroundColor: Color.fromRGBO(14, 128, 52, 1),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${response["message"]}',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-    } on DioException catch (e) {
-      if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
-      } else {
-        // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
-      }
-
-      Fluttertoast.showToast(msg: "Une erreur est survenue");
-    } finally {
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  bool _isVotingClosed = false;
-
 
   @override
   void initState() {
@@ -280,7 +220,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                           _buildGridItem(
                             icon: Icons.timer,
                             title: "${electionDetails.delay}",
-                            isActive: !_isVotingClosed,
                           ),
                           _buildGridItem(
                             icon: Icons.people,
@@ -290,74 +229,23 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                       ),
                       const SizedBox(height: 16),
                       electionDetails.lead!.length > 0 ||
-                              electionDetails.lead!.length == 1
+                          electionDetails.lead!.length == 1
                           ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildGridItem(
-                                  title: '${electionDetails.lead?[0]}',
-                                  showTrophy: true,
-                                ),
-                                if(electionDetails.lead!.length > 1) 
-                                _buildGridItem(
-                                  title: '${electionDetails.lead?[1]}',
-                                  showTrophy2: true,
-                                ),
-                              ],
-                            )
-                          : Center(
-                              child: Text("Aucune option en tête"),
-                            ),
-                      const SizedBox(height: 20),
-                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          SizedBox(
-                            width: screenWidth * 0.9,
-                            child: ElevatedButton.icon(
-                              onPressed: _isVotingClosed
-                                  ? null
-                                  : () => _showDeleteDialog(context),
-                              icon: const Icon(
-                                Icons.close,
-                                color: Colors.redAccent,
-                                size: 20,
-                              ),
-                              label: Text(_isVotingClosed
-                                  ? 'Vote clôturé'
-                                  : "Supprimer l'élection"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.redAccent,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                              ),
-                            ),
+                          _buildGridItem(
+                            title: '${electionDetails.lead?[0]}',
+                            showTrophy: true,
                           ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            width: screenWidth * 0.9,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                context.push("/second_tour/${widget.id}");
-                              },
-                              icon: const Icon(
-                                Icons.how_to_vote,
-                                color: Color.fromRGBO(14, 128, 52, 1),
-                              ),
-                              label: Text(
-                                'Deuxième tour',
-                                style: TextStyle(
-                                  color: Color.fromRGBO(14, 128, 52, 1),
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                              ),
+                          if(electionDetails.lead!.length > 1)
+                            _buildGridItem(
+                              title: '${electionDetails.lead?[1]}',
+                              showTrophy2: true,
                             ),
-                          ),
                         ],
+                      )
+                          : Center(
+                        child: Text("Aucune option en tête"),
                       ),
                       const SizedBox(height: 20),
                       if (loading2)
@@ -375,9 +263,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
                         ...resultatElection
                             .map((resultat) => _buildResultCard(resultat))
                             .toList(),
-                      SizedBox(
-                        height: 80,
-                      )
                     ],
                   ),
                 ),
@@ -397,93 +282,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
             ),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            context.push("/add_candidat/${widget.id}");
-          },
-          backgroundColor: Color.fromRGBO(14, 128, 52, 1),
-          elevation: 4,
-          icon: Icon(Icons.add, color: Colors.white),
-          label: Text(
-            "Ajouter les candidats",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  void _showDeleteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Row(
-            children: [
-              Icon(Icons.delete, color: Colors.red),
-              SizedBox(width: 10),
-              Text(
-                "Supression",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            "Voulez-vous vraiment supprimer cette élection ?",
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => {Navigator.of(context).pop()},
-              child: Text(
-                "Annuler",
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: deleteElection,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: !loading
-                  ? Text(
-                      "Supprimer",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )
-                  : SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3,
-                        color: Colors.white,
-                      ),
-                    ),
-            ),
-          ],
-          actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        );
-      },
     );
   }
 
@@ -496,11 +294,11 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
   }) {
     // Détermine si c'est le timer et si le vote est clôturé
     final isTimer = icon == Icons.timer;
-    final Color backgroundColor = isTimer && _isVotingClosed
+    final Color backgroundColor = isTimer
         ? Colors.red.shade900
         : isActive
-            ? Color.fromRGBO(14, 128, 52, 1)
-            : Colors.white;
+        ? Colors.green.shade600
+        : Colors.white;
 
     return Container(
       width: 150,
@@ -681,4 +479,20 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
     );
   }
 
+}
+
+class VoteOption {
+  final String title;
+  final String details;
+  final int votes;
+  final int totalVotes;
+
+  const VoteOption({
+    required this.title,
+    required this.details,
+    required this.votes,
+    required this.totalVotes,
+  });
+
+  double get percentage => votes / totalVotes * 100;
 }

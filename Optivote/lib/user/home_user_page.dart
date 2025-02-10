@@ -34,12 +34,43 @@ class _HomeUserPageState extends State<HomeUserPage>
   late List<Resultat> resultatElection = [];
   Candidat? _selectedCandidate;
   Election election = new Election();
+  List<Election> elections = [];
+  List<Election> electionsFinished = [];
   bool _hasVoted = false;
   bool loading = false;
   bool loading1 = false;
+  bool loading4 = false;
   bool loading2 = false;
   bool loading3 = false;
   int _totalVotes = 0;
+
+  finishedElections() async {
+    setState(() {
+      loading4 = true;
+    });
+    try {
+      electionsFinished = await electionService.getAllCompleted();
+      setState(() {
+        loading4 = false;
+      });
+      print(elections);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.statusCode);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+
+      Fluttertoast.showToast(msg: "Une erreur est survenue");
+    } finally {
+      setState(() {
+        loading4 = false;
+      });
+    }
+  }
 
   electionInProgress() async {
     setState(() {
@@ -217,6 +248,7 @@ class _HomeUserPageState extends State<HomeUserPage>
   void initState() {
     super.initState();
     electionInProgress();
+    finishedElections();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -259,8 +291,6 @@ class _HomeUserPageState extends State<HomeUserPage>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    int nbreVotes = _totalVotes;
-    int nbreVotants = 1234;
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(243, 246, 244, 1),
@@ -281,7 +311,7 @@ class _HomeUserPageState extends State<HomeUserPage>
                   ),
                 )
               : Text(
-                  "OptiVote",
+                  "Optivote",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: screenWidth * 0.05,
@@ -328,38 +358,148 @@ class _HomeUserPageState extends State<HomeUserPage>
               ),
             )
           : election.name == null
-              ? Center(
-                  child: Card(
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    color: Color.fromRGBO(14, 128, 52, 1),
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.how_to_vote,
-                            size: 50,
-                            color: Colors.white,
+                ?Center(
+        child: SingleChildScrollView(
+          child: Container(
+            width: screenWidth * 0.9, // Limite la largeur pour un look centré
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Card(
+                          elevation: 10,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          SizedBox(height: 20),
-                          Text(
-                            "Prochaine élection pour bientôt",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                          color: Color.fromRGBO(14, 128, 52, 1),
+                          child: Container(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.how_to_vote,
+                                        size: 50,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(height: 20),
+                                      Text(
+                                        "Aucune élection en cours",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                          "Liste des élections terminées",
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.05,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(14, 128, 52, 1),
+                          ),
+                        ),
+                      ),
+                      !loading4
+                          ? electionsFinished.length > 0 ? ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: electionsFinished.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.02,
+                              vertical: screenHeight * 0.01,
+                            ),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                context.push(
+                                    "/details_user_election/${electionsFinished[index].id}");
+                              },
+                              borderRadius: BorderRadius.circular(15),
+                              child: Padding(
+                                padding: EdgeInsets.all(screenWidth * 0.03),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image(
+                                        image: AssetImage("assets/img2.png"),
+                                        height: screenHeight * 0.08,
+                                        width: screenWidth * 0.2,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    SizedBox(width: screenWidth * 0.03),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${electionsFinished[index].name}",
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.04,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                              height: screenHeight * 0.005),
+                                          Text(
+                                            "${electionsFinished[index].startDate}-${electionsFinished[index].endDate}",
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.035,
+                                              color: Colors.grey[800],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                          : Center(
+                        child: Text("Aucune élection terminée"),
+                      )
+                      : Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: Colors.green.shade600,
+                        ),
+                      )
+                    ],
                   ),
-                )
-              : FadeTransition(
+                ),
+              ],
+            ),
+          ),
+        ),
+      )
+          : FadeTransition(
                   opacity: _fadeAnimation,
                   child: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
@@ -716,11 +856,16 @@ class _HomeUserPageState extends State<HomeUserPage>
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text(
+              child: !loading? Text(
                 "Déconnexion",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
+                ),
+              ): SizedBox(
+                child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: Colors.white,
                 ),
               ),
             ),

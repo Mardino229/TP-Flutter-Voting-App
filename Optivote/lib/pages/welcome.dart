@@ -28,7 +28,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
     _controller.forward();
 
     // Navigation automatique après 3 secondes
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         context.go('/connexion'); // ou la route de votre choix
 //         Navigator.push(

@@ -173,6 +173,16 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
         ),
         backgroundColor: Color.fromRGBO(14, 128, 52, 1),
         elevation: 0,
+        automaticallyImplyLeading: false, // Désactive le bouton de retour automatique
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop(); // Action de retour personnalisée
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -319,7 +329,7 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
                     onPressed: createElectionSecondTour,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(14, 128, 52, 1),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

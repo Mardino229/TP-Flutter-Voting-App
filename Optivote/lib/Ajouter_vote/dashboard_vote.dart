@@ -739,6 +739,9 @@ class _DashboardVoteState extends State<DashboardVote>
                         ),
                       ),
               ),
+              SizedBox(
+                height: 80,
+              )
             ],
           ),
         ),
@@ -751,7 +754,7 @@ class _DashboardVoteState extends State<DashboardVote>
         elevation: 4,
         icon: Icon(Icons.add, color: Colors.white),
         label: Text(
-          "Créer un vote",
+          "Créer une élection",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
@@ -774,7 +777,7 @@ class _DashboardVoteState extends State<DashboardVote>
             children: [
               const Icon(Icons.logout, color: Colors.red),
               const SizedBox(width: 10),
-              const Text(
+              const  Text(
                 "Déconnexion",
                 style: TextStyle(
                   fontSize: 20,

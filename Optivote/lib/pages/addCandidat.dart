@@ -21,6 +21,7 @@ class _AddCandidatState extends State<AddCandidat> {
   final ImagePicker _picker = ImagePicker();
   final candidatService = CandidatService();
   bool loading = false;
+  String _npiError = "";
   bool _isSubmitting = false;
 
   void addNewFields() {
@@ -104,10 +105,10 @@ class _AddCandidatState extends State<AddCandidat> {
   }
 
   addCandidat () async {
-    setState(() {
-      _isSubmitting = true;
-    });
     if (validateFields()) {
+      setState(() {
+        _isSubmitting = true;
+      });
       try {
         for (int i=0; i<candidatFields.length; i++){
           Map<String, dynamic> data = {
@@ -159,7 +160,8 @@ class _AddCandidatState extends State<AddCandidat> {
           print(e.response?.data["errors"]);
           final errors = e.response?.data['errors'];
           errors.forEach((key, value) {
-            print('$key: $value'); // Affiche chaque erreur
+            print('$key: $value');
+            Fluttertoast.showToast(msg: value[0].toString()); // Affiche chaque erreur
           });
           //
           // print(formattedErrors);
@@ -178,8 +180,8 @@ class _AddCandidatState extends State<AddCandidat> {
           // Something happened in setting up or sending the request that triggered an Error
           print(e.requestOptions);
           print(e.message);
+          Fluttertoast.showToast(msg: "Une erreur est survenue");
         }
-        Fluttertoast.showToast(msg: "Une erreur est survenue");
       } finally {
         setState(() {
           _isSubmitting = false;
@@ -231,6 +233,16 @@ class _AddCandidatState extends State<AddCandidat> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color.fromRGBO(14, 128, 52, 1),
+        automaticallyImplyLeading: false, // Désactive le bouton de retour automatique
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop(); // Action de retour personnalisée
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         title: const Text(
           'Ajouter un candidat',
           style: TextStyle(
@@ -268,7 +280,7 @@ class _AddCandidatState extends State<AddCandidat> {
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: Color.fromRGBO(14, 128, 52, 1),
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15),
@@ -289,7 +301,7 @@ class _AddCandidatState extends State<AddCandidat> {
                                 IconButton(
                                   onPressed: () => removeFields(index),
                                   icon: const Icon(Icons.delete),
-                                  color: Colors.red.shade100,
+                                  color: Colors.red.shade400,
                                   tooltip: 'Supprimer ce candidat',
                                 ),
                             ],
@@ -427,7 +439,7 @@ class _AddCandidatState extends State<AddCandidat> {
                     style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color.fromRGBO(14, 128, 52, 1),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
                       vertical: 16,
@@ -451,6 +463,8 @@ class _AddCandidatState extends State<AddCandidat> {
 class CandidatFields {
   final TextEditingController npiController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final String _npiError = "";
+  final String? _descriptionError = null;
   File? imageFile;
   bool hasImageError = false;
 }

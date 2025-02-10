@@ -73,7 +73,6 @@ class _LoginState extends State<Login> {
           //
           // print(formattedErrors);
           // Map<String, String> errors = e.response?.data["errors"];
-
           setState(() {
             _emailError =
                 errors["email"] == null ? "" : errors["email"][0].toString();
@@ -81,7 +80,6 @@ class _LoginState extends State<Login> {
                 ? ""
                 : errors["password"][0].toString();
           });
-
           print(e.response?.statusCode);
         } else {
           // Something happened in setting up or sending the request that triggered an Error

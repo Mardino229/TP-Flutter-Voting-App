@@ -12,7 +12,7 @@ import 'Reset_password_pages/reset_password_page2.dart';
 import 'Reset_password_pages/new_password_page.dart';
 import 'Ajouter_vote/creation_vote.dart';
 import 'user/home_user_page.dart';
-import 'user/detail_user.dart';
+import 'user/detail_user_election.dart';
 import 'admin/detail_admin.dart';
 import 'package:optivote/pages/welcome.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +20,7 @@ import 'package:go_router/go_router.dart';
 GoRouter route(token, role) {
   return GoRouter(
     initialLocation: token==""? '/'
-        : role=="user"? '/home_user' : '/connexion',
+        : role=="user"? '/home_user' : '/dashboard_vote',
     routes: [
       GoRoute(
         path: '/',
@@ -53,11 +53,11 @@ GoRouter route(token, role) {
         },
       ),
       GoRoute(
-        path: '/details_user/:id',
+        path: '/details_user_election/:id',
         // builder: (context, state) => NewPasswordPage(),
         builder: (context, state) {
           final String id = state.pathParameters['id']!;
-          return DetailUser();
+          return ElectionDetail(id: id,);
         },
       ),
       //lien vers la page de création de vote
@@ -79,13 +79,6 @@ GoRouter route(token, role) {
       GoRoute(
         path: '/home_user',
         builder: (context, state) => HomeUserPage(),
-      ),
-      GoRoute(
-        path: '/detail_vote/:id',
-        builder: (context, state) {
-          final String id = state.pathParameters['id']!;
-          return DetailUser();
-        },
       ),
       GoRoute(
         path: '/detail_election/:id',

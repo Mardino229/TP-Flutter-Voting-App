@@ -75,6 +75,19 @@ class ElectionService {
 
     return Election.fromJson(response.data["body"]);
   }
+  Future<Election> getByUser (String id) async{
+
+    final pref = await SharedPreferences.getInstance();
+    String token = pref.getString("token") ?? "";
+
+    if (token != "") {
+      api.options.headers['AUTHORIZATION'] = 'Bearer $token';
+    }
+
+    final response = await api.get('election/$id');
+
+    return Election.fromJson(response.data["body"]);
+  }
 
   Future<ElectionDetails> getDetails (String id) async{
 
