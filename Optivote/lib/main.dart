@@ -19,8 +19,8 @@ import 'package:go_router/go_router.dart';
 
 GoRouter route(token, role) {
   return GoRouter(
-    initialLocation: token==""? '/connexion'
-        : role=="user"? '/home_user' : '/dashboard_vote',
+    initialLocation: token==""? '/'
+        : role=="user"? '/home_user' : '/connexion',
     routes: [
       GoRoute(
         path: '/',

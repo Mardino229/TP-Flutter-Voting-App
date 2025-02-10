@@ -95,5 +95,8 @@ flutter:
 flutter_native_splash:
   color: "#FFFFFF"
   image: assets/logo/logoo.png
+  android: true
+  ios: true
+  web: true
 
 
