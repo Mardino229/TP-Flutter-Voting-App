@@ -140,7 +140,6 @@ class _DashboardVoteState extends State<DashboardVote>
       });
     }
   }
-
   dashboard() async {
     setState(() {
       loading2 = true;
@@ -170,7 +169,6 @@ class _DashboardVoteState extends State<DashboardVote>
       });
     }
   }
-
   Future<void> logout() async {
     setState(() {
       loading = true;
@@ -230,24 +228,6 @@ class _DashboardVoteState extends State<DashboardVote>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    // List<String> nomElection = [
-    //   "Election municipale 2025",
-    //   "Election miss UAC 2025",
-    //   "Election responsable 2025",
-    //   "Election miss 2025",
-    //   "Election législative 2025",
-    //   "Election presidentielle 2026"
-    // ];
-    // List<String> periode = [
-    //   "22/01/2025-22/02/2025",
-    //   "22/01/2025-22/02/2025",
-    //   "22/01/2025-22/02/2025",
-    //   "22/01/2025-22/02/2025",
-    //   "22/01/2025-22/02/2025",
-    //   "30/03/2026-22/04/2026"
-    // ];
-
-    int nbreVotants = 1234;
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(243, 246, 244, 1),

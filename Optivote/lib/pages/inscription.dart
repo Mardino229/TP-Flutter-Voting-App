@@ -66,12 +66,12 @@ class _InscState extends State<Insc> {
         });
       }
     } on DioException catch (e) {
-      print(e.response);
+      // print(e.response);
       if (e.response != null) {
-        print(e.response?.data["errors"]);
+        // print(e.response?.data["errors"]);
         final errors = e.response?.data['errors'];
         errors.forEach((key, value) {
-          print('$key: $value'); // Affiche chaque erreur
+          // print('$key: $value'); // Affiche chaque erreur
         });
         //
         // print(formattedErrors);
@@ -83,11 +83,11 @@ class _InscState extends State<Insc> {
           _passwordError = errors["password"]==null?"":errors["password"][0].toString();
         });
 
-        print(e.response?.statusCode);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -138,7 +138,7 @@ class _InscState extends State<Insc> {
   }
 
   bool _validateEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
     return emailRegex.hasMatch(email);
   }
 

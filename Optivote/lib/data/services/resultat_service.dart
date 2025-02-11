@@ -7,7 +7,7 @@ class ResultatService {
 
   Dio api = configureDio();
 
-  Future<List<Resultat>> getAll (String election_id) async{
+  Future<List<Resultat>> getAll (String electionId) async{
 
     final pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
@@ -16,7 +16,7 @@ class ResultatService {
       api.options.headers['AUTHORIZATION'] = 'Bearer $token';
     }
 
-    final response = await api.get('resultats/$election_id');
+    final response = await api.get('resultats/$electionId');
 
     return (response.data["body"] as List).map((e) => Resultat.fromJson(e)).toList();
   }

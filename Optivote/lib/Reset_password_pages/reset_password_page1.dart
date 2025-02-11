@@ -103,7 +103,7 @@ class _ResetPasswordPage1State extends State<ResetPasswordPage1> {
       return 'Ce champ est obligatoire';
     }
     // Expression régulière pour valider le format de l'email
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
       return 'Veuillez entrer une adresse email valide';
     }

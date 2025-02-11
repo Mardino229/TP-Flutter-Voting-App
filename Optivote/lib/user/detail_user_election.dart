@@ -2,13 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:optivote/Ajouter_vote/tour2.dart';
 import 'package:optivote/data/models/candidat.dart';
 import 'package:optivote/data/models/electionDetail.dart';
 import 'package:optivote/data/models/resultat.dart';
 import 'package:optivote/data/services/candidat_service.dart';
 import 'package:optivote/data/services/resultat_service.dart';
-import 'package:optivote/pages/addCandidat.dart';
 
 import '../data/models/election.dart';
 import '../data/services/election_service.dart';
@@ -23,13 +21,8 @@ class ElectionDetail extends StatefulWidget {
 }
 
 class _ElectionDetailState extends State<ElectionDetail> {
-  // État pour le timer
-  String _timerValue = '12:00:00';
-  // État pour le nombre de votants
-  int _votersCount = 126;
-  // État pour les résultats
-  late Election election = new Election();
-  late ElectionDetails electionDetails = new ElectionDetails();
+  late Election election = Election();
+  late ElectionDetails electionDetails = ElectionDetails();
   late List<Resultat> resultatElection = [];
   bool loading = false;
   bool loading2 = false;
@@ -53,12 +46,12 @@ class _ElectionDetailState extends State<ElectionDetail> {
       retrieveResultat();
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
+        // print(e.response?.data);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -80,12 +73,12 @@ class _ElectionDetailState extends State<ElectionDetail> {
       });
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
+        // print(e.response?.data);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -107,12 +100,12 @@ class _ElectionDetailState extends State<ElectionDetail> {
       });
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
+        // print(e.response?.data);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -140,12 +133,10 @@ class _ElectionDetailState extends State<ElectionDetail> {
         children: [
           if (loading)
             Expanded(
-              child: Container(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    color: Colors.green.shade600,
-                  ),
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.green.shade600,
                 ),
               ),
             ),
@@ -228,7 +219,7 @@ class _ElectionDetailState extends State<ElectionDetail> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      electionDetails.lead!.length > 0 ||
+                      electionDetails.lead!.isNotEmpty ||
                           electionDetails.lead!.length == 1
                           ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -262,7 +253,7 @@ class _ElectionDetailState extends State<ElectionDetail> {
                       if (!loading2 && resultatElection.isNotEmpty)
                         ...resultatElection
                             .map((resultat) => _buildResultCard(resultat))
-                            .toList(),
+                            ,
                     ],
                   ),
                 ),
@@ -270,13 +261,10 @@ class _ElectionDetailState extends State<ElectionDetail> {
             ),
           if (loading3)
             Expanded(
-              child: Container(
-                // Fond semi-transparent
-                child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    color: Colors.green.shade600,
-                  ),
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.green.shade600,
                 ),
               ),
             ),
@@ -416,7 +404,7 @@ class _ElectionDetailState extends State<ElectionDetail> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${resultat.candidat?.name ?? 'Nom indisponible'}",
+                            resultat.candidat?.name ?? 'Nom indisponible',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -424,7 +412,7 @@ class _ElectionDetailState extends State<ElectionDetail> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            "${resultat.candidat?.description ?? 'Description indisponible'}",
+                            resultat.candidat?.description ?? 'Description indisponible',
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,

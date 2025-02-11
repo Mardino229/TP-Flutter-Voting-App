@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:optivote/Ajouter_vote/details_election.dart';
 import 'package:optivote/data/models/election.dart';
 import 'package:optivote/data/services/authentificate_service.dart';
 import 'package:optivote/data/services/election_service.dart';
@@ -33,7 +32,7 @@ class _HomeUserPageState extends State<HomeUserPage>
 
   late List<Resultat> resultatElection = [];
   Candidat? _selectedCandidate;
-  Election election = new Election();
+  Election election = Election();
   List<Election> elections = [];
   List<Election> electionsFinished = [];
   bool _hasVoted = false;
@@ -53,15 +52,15 @@ class _HomeUserPageState extends State<HomeUserPage>
       setState(() {
         loading4 = false;
       });
-      print(elections);
+      // print(elections);
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
+        // print(e.response?.data);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -87,12 +86,12 @@ class _HomeUserPageState extends State<HomeUserPage>
       hasVoted();
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
+        // print(e.response?.data);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -115,12 +114,12 @@ class _HomeUserPageState extends State<HomeUserPage>
       });
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
+        // print(e.response?.data);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -134,7 +133,6 @@ class _HomeUserPageState extends State<HomeUserPage>
   hasVoted() async {
     try {
       final response = await voteService.verifyVote(election.id.toString());
-      print(response["success"]);
       setState(() {
         _hasVoted = !response["success"];
       });
@@ -142,12 +140,12 @@ class _HomeUserPageState extends State<HomeUserPage>
       retrieveResultat();
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response?.data);
-        print(e.response?.statusCode);
+        // print(e.response?.data);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -165,7 +163,7 @@ class _HomeUserPageState extends State<HomeUserPage>
       });
       try {
         final pref = await SharedPreferences.getInstance();
-        int? userId = pref.getInt("id") ?? null;
+        int? userId = pref.getInt("id") ;
         Map<String, dynamic> data = {
           "election_id": election.id,
           "candidat_id": id,
@@ -178,12 +176,12 @@ class _HomeUserPageState extends State<HomeUserPage>
         hasVoted();
       } on DioException catch (e) {
         if (e.response != null) {
-          print(e.response?.data);
-          print(e.response?.statusCode);
+          // print(e.response?.data);
+          // print(e.response?.statusCode);
         } else {
           // Something happened in setting up or sending the request that triggered an Error
-          print(e.requestOptions);
-          print(e.message);
+          // print(e.requestOptions);
+          // print(e.message);
         }
 
         Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -215,7 +213,6 @@ class _HomeUserPageState extends State<HomeUserPage>
     });
     try {
       final response = await authentificateService.logout();
-      print(response);
       if (response["success"]) {
         Fluttertoast.showToast(msg: response["message"]);
         final sharedPref = await SharedPreferences.getInstance();
@@ -228,12 +225,12 @@ class _HomeUserPageState extends State<HomeUserPage>
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response);
-        print(e.response?.statusCode);
+        // print(e.response);
+        // print(e.response?.statusCode);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        // print(e.requestOptions);
+        // print(e.message);
       }
 
       Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -360,7 +357,7 @@ class _HomeUserPageState extends State<HomeUserPage>
           : election.name == null
                 ?Center(
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: screenWidth * 0.9, // Limite la largeur pour un look centré
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -797,9 +794,11 @@ class _HomeUserPageState extends State<HomeUserPage>
                                             ),
                                         ]
                                       : [
-                                          SizedBox(
-                                            child: Text("Aucun candidat"),
-                                          )
+                                        Center(
+                                          child: SizedBox(
+                                            child: Text("Aucun candidat. Patientez l'ajout des candidats."),
+                                          ),
+                                        ),
                                         ],
                             ),
                           ),

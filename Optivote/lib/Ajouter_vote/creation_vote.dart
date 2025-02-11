@@ -28,7 +28,6 @@ class _CreateVotePageState extends State<CreateVotePage> {
       loading = true;
     });
     try {
-      print(_startDate);
       Map<String, dynamic> data = {
         'name': _titreController.text,
         'start_date': _startDateController.text,
@@ -41,6 +40,21 @@ class _CreateVotePageState extends State<CreateVotePage> {
         // context.push("/detail_election/${election.id}");
         context.push("/dashboard_vote");
         Fluttertoast.showToast(msg: response["message"]);
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${response["message"]}',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
       }
       // dispose();
     } on DioException catch (e) {

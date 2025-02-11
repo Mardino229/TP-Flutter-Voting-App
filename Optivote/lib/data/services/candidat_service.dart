@@ -57,7 +57,7 @@ class CandidatService {
     return response.data;
   }
 
-  Future<List<Candidat>> getAll (String election_id) async{
+  Future<List<Candidat>> getAll (String electionId) async{
 
     final pref = await SharedPreferences.getInstance();
     String token = pref.getString("token") ?? "";
@@ -66,7 +66,7 @@ class CandidatService {
       api.options.headers['AUTHORIZATION'] = 'Bearer $token';
     }
 
-    final response = await api.get('candidats/$election_id');
+    final response = await api.get('candidats/$electionId');
 
     return (response.data["body"] as List).map((e) => Candidat.fromJson(e)).toList();
   }

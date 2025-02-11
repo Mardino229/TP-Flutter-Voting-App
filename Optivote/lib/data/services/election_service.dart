@@ -113,7 +113,6 @@ class ElectionService {
     }
 
     final response = await api.get('elections');
-    print(response);
 
     return (response.data["body"] as List).map((e) => Election.fromJson(e)).toList();
   }
@@ -128,7 +127,6 @@ class ElectionService {
     }
 
     final response = await api.get('dashboard');
-    print(response);
 
     return response.data;
   }

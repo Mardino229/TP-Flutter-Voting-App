@@ -10,7 +10,7 @@ class AuthentificateService {
   Future<Map<String, dynamic>> register (Map<String, dynamic> data) async{
 
     final response = await api.post('register', data: data);
-    print("Réponse brute : ${response.data}");
+    // print("Réponse brute : ${response.data}");
 
     // Si le statut est 422 (erreur de validation), renvoyer une exception avec les détails
     if (response.statusCode == 422) {
@@ -26,7 +26,7 @@ class AuthentificateService {
   Future<Map<String, dynamic>> login (Map<String, dynamic> data) async{
 
     final response = await api.post('login', data: data);
-    print("Réponse brute : ${response.data}");
+    // print("Réponse brute : ${response.data}");
 
     // Si le statut est 422 (erreur de validation), renvoyer une exception avec les détails
     if (response.statusCode == 422) {
@@ -72,11 +72,7 @@ class AuthentificateService {
   Future<Map<String, dynamic>> logout () async{
 
     final pref = await SharedPreferences.getInstance();
-    int? npi = pref.getInt("npi") ?? null;
-
-    // if (npi != "") {}
-
-    print(npi);
+    int? npi = pref.getInt("npi");
 
     final response = await api.post('logout', data: {"npi": npi});
 

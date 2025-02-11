@@ -65,10 +65,10 @@ class _LoginState extends State<Login> {
         // dispose();
       } on DioException catch (e) {
         if (e.response != null) {
-          print(e.response?.data["errors"]);
+          // print(e.response?.data["errors"]);
           final errors = e.response?.data['errors'];
           errors.forEach((key, value) {
-            print('$key: $value'); // Affiche chaque erreur
+            // print('$key: $value'); // Affiche chaque erreur
           });
           //
           // print(formattedErrors);
@@ -80,11 +80,11 @@ class _LoginState extends State<Login> {
                 ? ""
                 : errors["password"][0].toString();
           });
-          print(e.response?.statusCode);
+          // print(e.response?.statusCode);
         } else {
           // Something happened in setting up or sending the request that triggered an Error
-          print(e.requestOptions);
-          print(e.message);
+          // print(e.requestOptions);
+          // print(e.message);
         }
 
         Fluttertoast.showToast(msg: "Une erreur est survenue");
@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
   }
 
   bool _validateEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
     return emailRegex.hasMatch(email);
   }
 

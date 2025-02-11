@@ -51,13 +51,13 @@ class ResetPasswordPage2 extends StatelessWidget {
                   onPressed: () {
                     context.push('/new_password');
                   },
-                  child: Text("Vérifier le mail"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF006400),
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(vertical: 16),
                     textStyle: TextStyle(fontSize: 18),
                   ),
+                  child: Text("Vérifier le mail"),
                 ),
               ),
               SizedBox(height: 24),
@@ -71,7 +71,7 @@ class ResetPasswordPage2 extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  print("Renvoyer l'email");
+                  // print("Renvoyer l'email");
                 },
                 child: Text(
                   "renvoyer l'e-mail",

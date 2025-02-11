@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:optivote/data/services/election_service.dart';
 
-import '../data/models/election.dart';
 
 class SecondTourScreen extends StatefulWidget {
   final String id;
@@ -56,26 +55,6 @@ class _SecondTourScreenState extends State<SecondTourScreen> {
     }
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      print('Date de début: ${DateFormat('yyyy/MM/dd').format(startDate!)}');
-      print('Date de fin: ${DateFormat('yyyy/MM/dd').format(endDate!)}');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Formulaire soumis avec succès!',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-          backgroundColor: Color.fromRGBO(14, 128, 52, 1),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      );
-    }
-  }
 
   createElectionSecondTour() async {
     if (_formKey.currentState!.validate()) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:optivote/pages/addCandidat.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -17,7 +16,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 1),
       vsync: this,
     );
     _animation = CurvedAnimation(

@@ -2,13 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:optivote/Ajouter_vote/tour2.dart';
 import 'package:optivote/data/models/candidat.dart';
 import 'package:optivote/data/models/electionDetail.dart';
 import 'package:optivote/data/models/resultat.dart';
 import 'package:optivote/data/services/candidat_service.dart';
 import 'package:optivote/data/services/resultat_service.dart';
-import 'package:optivote/pages/addCandidat.dart';
 
 import '../data/models/election.dart';
 import '../data/services/election_service.dart';
@@ -23,11 +21,7 @@ class ElectionDetailsScreen extends StatefulWidget {
 }
 
 class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
-  // État pour le timer
-  String _timerValue = '12:00:00';
-  // État pour le nombre de votants
-  int _votersCount = 126;
-  // État pour les résultats
+
   late Election election = new Election();
   late ElectionDetails electionDetails = new ElectionDetails();
   late List<Resultat> resultatElection = [];
@@ -35,6 +29,7 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
   bool loading2 = false;
   bool loading3 = false;
   bool loading4 = false;
+  bool _isVotingClosed = false;
   List<Candidat> candidats = [];
   final candidatService = CandidatService();
   final resultatService = ResultatService();
@@ -68,7 +63,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       });
     }
   }
-
   retrieveDetailsElection() async {
     setState(() {
       loading3 = true;
@@ -95,7 +89,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       });
     }
   }
-
   retrieveResultat() async {
     setState(() {
       loading2 = true;
@@ -122,7 +115,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       });
     }
   }
-
   deleteElection() async {
     setState(() {
       loading4 = true;
@@ -179,9 +171,6 @@ class _ElectionDetailsScreenState extends State<ElectionDetailsScreen> {
       });
     }
   }
-
-  bool _isVotingClosed = false;
-
 
   @override
   void initState() {

@@ -52,10 +52,10 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
       } on DioException catch (e) {
 
         if (e.response != null) {
-          print(e.response?.data["errors"]);
+          // print(e.response?.data["errors"]);
           final errors = e.response?.data['errors'];
           errors.forEach((key, value) {
-            print('$key: $value'); // Affiche chaque erreur
+            // print('$key: $value'); // Affiche chaque erreur
           });
           //
           // print(formattedErrors);
@@ -67,11 +67,11 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
           //   _passwordError = errors["password"]==null?"":errors["password"][0].toString();
           // });
 
-          print(e.response?.statusCode);
+          // print(e.response?.statusCode);
         } else {
           // Something happened in setting up or sending the request that triggered an Error
-          print(e.requestOptions);
-          print(e.message);
+          // print(e.requestOptions);
+          // print(e.message);
         }
 
         Fluttertoast.showToast(msg: "Une erreur est survenue");

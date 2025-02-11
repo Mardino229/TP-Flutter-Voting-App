@@ -21,7 +21,6 @@ class _AddCandidatState extends State<AddCandidat> {
   final ImagePicker _picker = ImagePicker();
   final candidatService = CandidatService();
   bool loading = false;
-  String _npiError = "";
   bool _isSubmitting = false;
 
   void addNewFields() {
@@ -116,10 +115,7 @@ class _AddCandidatState extends State<AddCandidat> {
             'description': candidatFields[i].descriptionController.text,
             'election_id': widget.id,
           };
-          print(candidatFields[i].npiController.text);
-          print(candidatFields[i].descriptionController.text);
           final response = await candidatService.add(data,candidatFields[i].imageFile);
-          print(response);
           if (response["success"]){
             context.push("/detail_election/${widget.id}");
             ScaffoldMessenger.of(context).showSnackBar(
@@ -157,10 +153,10 @@ class _AddCandidatState extends State<AddCandidat> {
       } on DioException catch (e) {
 
         if (e.response != null) {
-          print(e.response?.data["errors"]);
+          // print(e.response?.data["errors"]);
           final errors = e.response?.data['errors'];
           errors.forEach((key, value) {
-            print('$key: $value');
+            // print('$key: $value');
             Fluttertoast.showToast(msg: value[0].toString()); // Affiche chaque erreur
           });
           //
@@ -175,11 +171,11 @@ class _AddCandidatState extends State<AddCandidat> {
           //   //   _endError = errors["end_date"][0].toString();
           //   // }
           // });
-          print(e.response?.statusCode);
+          // print(e.response?.statusCode);
         } else {
           // Something happened in setting up or sending the request that triggered an Error
-          print(e.requestOptions);
-          print(e.message);
+          // print(e.requestOptions);
+          // print(e.message);
           Fluttertoast.showToast(msg: "Une erreur est survenue");
         }
       } finally {
@@ -411,7 +407,7 @@ class _AddCandidatState extends State<AddCandidat> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -463,8 +459,6 @@ class _AddCandidatState extends State<AddCandidat> {
 class CandidatFields {
   final TextEditingController npiController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final String _npiError = "";
-  final String? _descriptionError = null;
   File? imageFile;
   bool hasImageError = false;
 }
