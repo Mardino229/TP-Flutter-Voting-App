@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optivote/data/models/election.dart';
@@ -289,7 +290,12 @@ class _HomeUserPageState extends State<HomeUserPage>
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      SystemNavigator.pop(); // Quitte l'application
+      return false; // Empêche l'action de retour
+    },
+    child:  Scaffold(
       backgroundColor: Color.fromRGBO(243, 246, 244, 1),
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -799,7 +805,7 @@ class _HomeUserPageState extends State<HomeUserPage>
                                             child: Text("Aucun candidat. Patientez l'ajout des candidats."),
                                           ),
                                         ),
-                                        ],
+                              ],
                             ),
                           ),
                         ),
@@ -808,6 +814,7 @@ class _HomeUserPageState extends State<HomeUserPage>
                     ),
                   ),
                 ),
+    )
     );
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,6 +30,8 @@ class _ElectionDetailState extends State<ElectionDetail> {
   bool loading2 = false;
   bool loading3 = false;
   bool loading4 = false;
+  int delay = 0;
+  Timer? _timer;
   List<Candidat> candidats = [];
   final candidatService = CandidatService();
   final resultatService = ResultatService();
@@ -70,7 +74,11 @@ class _ElectionDetailState extends State<ElectionDetail> {
       electionDetails = await electionService.getDetails(widget.id);
       setState(() {
         loading3 = false;
+        delay = electionDetails.delay!;
       });
+      if (_timer == null || !_timer!.isActive) {
+        startTimer();
+      }
     } on DioException catch (e) {
       if (e.response != null) {
         // print(e.response?.data);
@@ -116,12 +124,26 @@ class _ElectionDetailState extends State<ElectionDetail> {
     }
   }
 
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (delay > 0) {
+        setState(() {
+          delay--;
+        });
+      } else {
+        _timer?.cancel(); // Arrêter le timer lorsque le temps atteint 0
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     retrieveElection();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +232,7 @@ class _ElectionDetailState extends State<ElectionDetail> {
                         children: [
                           _buildGridItem(
                             icon: Icons.timer,
-                            title: "${electionDetails.delay}",
+                            title: formatDuration(delay),
                           ),
                           _buildGridItem(
                             icon: Icons.people,
@@ -467,20 +489,16 @@ class _ElectionDetailState extends State<ElectionDetail> {
     );
   }
 
-}
+  String formatDuration(int seconds) {
+    int days = seconds ~/ 86400; // 1 jour = 86400 secondes
+    int hours = (seconds % 86400) ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    int secs = seconds % 60;
 
-class VoteOption {
-  final String title;
-  final String details;
-  final int votes;
-  final int totalVotes;
+    return "${days.toString().padLeft(2, '0')}J:"
+        "${hours.toString().padLeft(2, '0')}h:"
+        "${minutes.toString().padLeft(2, '0')}m:"
+        "${secs.toString().padLeft(2, '0')}s";
+  }
 
-  const VoteOption({
-    required this.title,
-    required this.details,
-    required this.votes,
-    required this.totalVotes,
-  });
-
-  double get percentage => votes / totalVotes * 100;
 }

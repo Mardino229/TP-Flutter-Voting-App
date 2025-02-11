@@ -1,12 +1,12 @@
 class ElectionDetails {
-  String? delay;
+  int? delay;
   int? nbrVote;
   List<String>? lead;
 
   ElectionDetails({this.delay, this.nbrVote, this.lead});
 
   ElectionDetails.fromJson(Map<String, dynamic> json) {
-    delay = json['delay'];
+    delay = json['delay'].toInt();
     nbrVote = json['nbr_vote'];
     lead = json['lead'].cast<String>();
   }

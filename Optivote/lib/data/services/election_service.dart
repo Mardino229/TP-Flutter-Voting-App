@@ -99,7 +99,7 @@ class ElectionService {
     }
 
     final response = await api.get('election/detail/$id');
-
+    print(response);
     return ElectionDetails.fromJson(response.data["body"]);
   }
 

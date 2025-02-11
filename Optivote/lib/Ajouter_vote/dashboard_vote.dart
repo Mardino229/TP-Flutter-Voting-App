@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optivote/Ajouter_vote/details_election.dart';
@@ -229,7 +230,12 @@ class _DashboardVoteState extends State<DashboardVote>
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          SystemNavigator.pop(); // Quitte l'application
+          return false; // Empêche l'action de retour
+    },
+    child: Scaffold(
       backgroundColor: Color.fromRGBO(243, 246, 244, 1),
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -741,6 +747,7 @@ class _DashboardVoteState extends State<DashboardVote>
           ),
         ),
       ),
+    )
     );
   }
 
